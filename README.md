@@ -1,5 +1,5 @@
-Nama : Pearlita Anindya Prameswari
+Nama: Pearlita Anindya Prameswari
 
-NPM : 2506547670
+NPM: 2506547670
 
-Kelas : PBP C
+Kelas: PBP C
