@@ -169,6 +169,89 @@ h1, .brand {
     border: 3px solid var(--ink);
 }
 
+.experience {
+    padding: 0rem 0 3rem;
+}
+
+.section-title{
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    border-bottom:2px solid var(--accent-dark);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+}
+
+.experience-items{
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    padding-left: 24px;
+
+    margin: 0;
+    position: relative;
+    transition: transform 0.2s ease;
+    transform-origin: left center;
+}
+
+.experience-items::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: -7px;
+    width: 2px;
+    background-color: var(--accent-dark);
+}
+
+.experience-items::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent);
+    border-radius: 50%;
+}
+
+.experience-items:last-child::before{
+    display: none;
+}
+
+.company-organization{
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--ink);
+    margin: 0 0 4px 0;
+    transition: all 0.2s ease;
+    transform-origin: left center;
+}
+
+.experience-items:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.experience-items:hover .company-organization{
+    color: var(--accent-dark);
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.experience-name{
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0;
+}
+
+.experience-period{
+    font-size: 1rem;
+    font-style: italic;
+    color:#6b6459;
+    margin: 0;
+}
+
 .site-footer {
     padding: 1.5rem;
     color: var(--text-muted);
