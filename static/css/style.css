@@ -217,6 +217,11 @@ h1, .brand {
     display: none;
 }
 
+.timeline-items:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
 .timeline-title{
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 1.2rem;
@@ -225,11 +230,6 @@ h1, .brand {
     margin: 0 0 4px 0;
     transition: all 0.2s ease;
     transform-origin: left center;
-}
-
-.timeline-items:hover{
-    transform: scale(1.02);
-    cursor: pointer;
 }
 
 .timeline-items:hover .timeline-title{
