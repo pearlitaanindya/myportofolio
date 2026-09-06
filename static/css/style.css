@@ -190,13 +190,12 @@ nav a:hover{
 
 .timeline-items{
     padding-top: 0;
-    padding-right: 0;
+    padding-right: 20px;
     padding-bottom: 1.5rem;
     padding-left: 24px;
 
     margin: 0;
     position: relative;
-    transition: transform 0.2s ease;
     transform-origin: left center;
     transition: all 0.4s ease;
 
