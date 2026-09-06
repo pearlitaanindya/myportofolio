@@ -236,7 +236,7 @@ nav a:hover{
 }
 
 .timeline-title{
-    font-family: -apple-system, "Poppins", Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Poppins", -apple-system, Roboto, Helvetica, Arial, sans-serif;
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--ink);
