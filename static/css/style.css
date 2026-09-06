@@ -57,8 +57,15 @@ h1, .brand {
 
 .site-header nav a {
     color: var(--ink);
+    font-family: "Poppins", -apple-system, Roboto, Helvetica, Arial, sans-serif;
     text-decoration: none;
     font-size: 0.95rem;
+    padding: 0 10px;
+    transition: 0.3s;
+}
+
+nav a:hover{
+    color: var(--accent-dark);
 }
 
 .hero {
@@ -282,5 +289,17 @@ h1, .brand {
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .site-header nav{
+        gap: 0.7rem;
+    }
+
+    .site-header nav a{
+        font-size: 0.9rem;
+    }
+
+    .brand {
+        font-size: 1rem;
     }
 }
