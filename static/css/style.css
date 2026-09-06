@@ -9,7 +9,8 @@
     --paper: #faf6f0;
     --accent: #c488cc;
     --accent-dark: #c488cc;
-    --line: #fcedbe;
+    --line: #e0c2ff;
+    --fill: #fcedbe;
     --text-muted: #6b6459;
     --radius: 4px;
 }
@@ -22,7 +23,7 @@ body {
 }
 
 h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .container {
@@ -174,7 +175,7 @@ h1, .brand {
 }
 
 .section-title{
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
     border-bottom:2px solid var(--accent-dark);
     padding-bottom: 8px;
     margin-bottom: 24px;
@@ -221,15 +222,15 @@ h1, .brand {
 
 .timeline-items:hover, 
 .timeline-items:active{
-    border: 1px solid var(--line);
+    border: 1px solid var(--fill);
     border-radius: 10px;
-    background-color: var(--line);
+    background-color: var(--fill);
     transform: scale(1.02);
     cursor: pointer;
 }
 
 .timeline-title{
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, "Poppins", Roboto, Helvetica, Arial, sans-serif;
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--ink);
