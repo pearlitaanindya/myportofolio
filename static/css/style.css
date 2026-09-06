@@ -275,6 +275,15 @@ nav a:hover{
 }
 
 @media (max-width: 600px) {
+    .site-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .site-header h1{
+        flex-direction: flex-start;
+    }
+
     .hero-grid {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -292,11 +301,13 @@ nav a:hover{
     }
 
     .site-header nav{
+        justify-content: flex-end;
+        flex-wrap: wrap;
         gap: 0.7rem;
     }
 
     .site-header nav a{
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .brand {
