@@ -219,7 +219,8 @@ h1, .brand {
     display: none;
 }
 
-.timeline-items:hover, .timeline-items:focus{
+.timeline-items:hover, 
+.timeline-items:active{
     border: 1px solid var(--line);
     border-radius: 10px;
     background-color: var(--line);
@@ -238,7 +239,7 @@ h1, .brand {
 }
 
 .timeline-items:hover .timeline-title,
-.timeline-items:focus .timeline-title{
+.timeline-items:active .timeline-title{
     color: var(--accent-dark);
     transform: scale(1.05);
     cursor: pointer;
