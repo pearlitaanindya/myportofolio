@@ -123,9 +123,14 @@ nav a:hover{
 }
 
 .bio {
+    margin-top: 1.5rem;
+    text-align: justify;
+    padding: 0.7rem;  
     color: var(--text-muted);
     max-width: 480px;
     margin-bottom: 1.5rem;
+    border-radius: 15px;
+    background-color: var(--fill);
 }
 
 .meta-list {
