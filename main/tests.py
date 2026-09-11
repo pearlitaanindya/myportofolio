@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Education
 
 
 class MainTest(TestCase):
@@ -11,6 +11,11 @@ class MainTest(TestCase):
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
+        )
+        self.education = Education.objects.create(
+            degree="Bachelor of Computer Science",
+            school="Universitas Indonesia",
+            gpa=3.62,
         )
 
     def test_main_url_is_accessible(self):
@@ -56,3 +61,34 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+    def test_education_model(self):
+            self.assertEqual(str(self.education), "Bachelor of Computer Science")
+            self.assertEqual(self.education.gpa, 3.62)
+            self.assertEqual(self.education.school, "Universitas Indonesia")
+            self.assertTrue(self.experience.is_ongoing)
+
+    def test_education_page(self):
+            response = self.client.get(reverse("main:show_education"))
+    
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, "education.html")
+            self.assertContains(response, self.education.degree)
+            self.assertContains(response, "3.62")
+            self.assertContains(response, self.education.school)
+            self.assertContains(response, "Present")
+            self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+    def test_empty_education_page(self):
+            Education.objects.all().delete()
+            response = self.client.get(reverse("main:show_education"))
+            self.assertContains(response, "No education added yet.")
+
+    def test_completed_education(self):
+            self.education.ended_at = timezone.now()
+            self.education.save()
+            response = self.client.get(reverse("main:show_education"))
+    
+            self.assertFalse(self.education.is_ongoing)
+            self.assertContains(response, "Graduated")
+            self.assertNotContains(response, "Present")
