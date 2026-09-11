@@ -11,11 +11,13 @@ class MainTest(TestCase):
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
+            started_at="2026-08-06"
         )
         self.education = Education.objects.create(
             degree="Bachelor of Computer Science",
             school="Universitas Indonesia",
             gpa=3.62,
+            started_at="2025-08-25"
         )
 
     def test_main_url_is_accessible(self):
@@ -44,23 +46,24 @@ class MainTest(TestCase):
         self.assertContains(response, self.experience.title)
         self.assertContains(response, self.experience.description)
         self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Sedang berlangsung")
+        self.assertContains(response, "August 2026")
+        self.assertContains(response, "Present")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
+        self.assertContains(response, "No experience added yet.")
 
     def test_completed_experience(self):
-        self.experience.ended_at = timezone.now()
+        self.experience.ended_at = "2026-09-10"
         self.experience.save()
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Selesai")
-        self.assertNotContains(response, "Sedang berlangsung")
+        self.assertContains(response, "September 2026")
+        self.assertNotContains(response, "Present")
 
     def test_education_model(self):
             self.assertEqual(str(self.education), "Bachelor of Computer Science")
@@ -85,10 +88,10 @@ class MainTest(TestCase):
             self.assertContains(response, "No education added yet.")
 
     def test_completed_education(self):
-            self.education.ended_at = timezone.now()
+            self.education.ended_at = "2026-10-01"
             self.education.save()
             response = self.client.get(reverse("main:show_education"))
     
             self.assertFalse(self.education.is_ongoing)
-            self.assertContains(response, "Graduated")
+            self.assertContains(response, "October 2026")
             self.assertNotContains(response, "Present")
