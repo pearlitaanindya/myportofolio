@@ -39,15 +39,18 @@
                             {{ experience.description }}
                         </p>
 
-                        {% if experience.is_ongoing %}
-                            <p class="experience-status">Sedang berlangsung</p>
-                        {% else %}
-                            <p class="experience-status">Selesai</p>
-                        {% endif %}
+                        <p class="experience-status">
+                            {{ experience.started_at|date:"F Y" }} - 
+                            {% if experience.is_ongoing %}
+                                Present
+                            {% else %}
+                                {{ experience.ended_at|date:"F Y" }}
+                            {% endif %}
+                         </p>
                     </article>
                 {% empty %}
                     <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
+                        No experience added yet.
                     </p>
                 {% endfor %}
             </div>
