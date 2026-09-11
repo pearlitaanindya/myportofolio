@@ -22,7 +22,6 @@
         </div>
     </header>
     <main>
-        <main>
     <section class="education-section" id="education">
         <div class="container">
             <p class="section-kicker">My Academic Journey!</p>
@@ -31,9 +30,6 @@
             <div class="education-grid">
                 {% for education in education_list %}
                     <article class="education-card">
-                        <span class="education-category">
-                            {{ education.get_category_display }}
-                        </span>
                         <h2>{{ education.degree }}</h2>
                         <p class="education-gpa">
                             {{ education.gpa }}
@@ -59,8 +55,6 @@
             </div>
         </div>
     </section>
-</main>
-
     </main>
 
     <footer class="site-footer">
