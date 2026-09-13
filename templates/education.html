@@ -22,23 +22,23 @@
         </div>
     </header>
     <main>
-    <section class="education-section" id="education">
+    <section class="portofolio-section" id="education">
         <div class="container">
             <p class="section-kicker">My Academic Journey!</p>
             <h1>Education</h1>
 
-            <div class="education-grid">
+            <div class="card-grid">
                 {% for education in education_list %}
-                    <article class="education-card">
+                    <article class="card">
                         <h2>{{ education.degree }}</h2>
-                        <p class="education-gpa">
+                        <p class="card-text">
                             {{ education.gpa }}
                         </p>
-                        <p class="education-school">
+                        <p class="card-text">
                             {{ education.school }}
                         </p>
 
-                        <p class="education-status">
+                        <p class="card-footer">
                             {{ education.started_at|date:"F Y" }} - 
                             {% if education.is_ongoing %}
                                 Present

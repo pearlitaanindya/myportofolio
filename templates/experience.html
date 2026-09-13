@@ -22,24 +22,23 @@
         </div>
     </header>
     <main>
-        <main>
-    <section class="experience-section" id="experience">
+    <section class="portofolio-section" id="experience">
         <div class="container">
             <p class="section-kicker">My Journey!</p>
             <h1>Experience</h1>
 
-            <div class="experience-grid">
+            <div class="card-grid">
                 {% for experience in experience_list %}
-                    <article class="experience-card">
-                        <span class="experience-category">
+                    <article class="card">
+                        <span class="card-category">
                             {{ experience.get_category_display }}
                         </span>
                         <h2>{{ experience.title }}</h2>
-                        <p class="experience-description">
+                        <p class="card-text">
                             {{ experience.description }}
                         </p>
 
-                        <p class="experience-status">
+                        <p class="card-footer">
                             {{ experience.started_at|date:"F Y" }} - 
                             {% if experience.is_ongoing %}
                                 Present
@@ -56,8 +55,6 @@
             </div>
         </div>
     </section>
-</main>
-
     </main>
 
     <footer class="site-footer">
