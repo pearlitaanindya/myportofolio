@@ -30,22 +30,33 @@
             <div class="card-grid">
                 {% for education in education_list %}
                     <article class="card">
-                        <h2>{{ education.degree }}</h2>
-                        <p class="card-text">
-                            {{ education.gpa }}
-                        </p>
-                        <p class="card-text">
-                            {{ education.school }}
-                        </p>
 
-                        <p class="card-footer">
-                            {{ education.started_at|date:"F Y" }} - 
-                            {% if education.is_ongoing %}
-                                Present
-                            {% else %}
-                                {{ education.ended_at|date:"F Y" }}
-                            {% endif %}
-                         </p>
+                        {% if education.thumbnail %}
+                            <img src="{{ education.thumbnail }}" alt="{{ education.title }}" class= "card-image">
+                        {% endif %}
+
+                        <div class="card-content">
+                            <h2>{{ education.degree }}</h2>
+
+                            <p class="card-text" style="font-weight: bold; color: var(-ink);">
+                                {{ education.school }}
+                            </p>
+
+
+                            <p class="card-text">
+                                GPA/Grade: {{ education.gpa }}
+                            </p>
+
+                            <p class="card-footer">
+                                {{ education.started_at|date:"F Y" }} - 
+                                {% if education.is_ongoing %}
+                                    Present
+                                {% else %}
+                                    {{ education.ended_at|date:"F Y" }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        
                     </article>
                 {% empty %}
                     <p class="empty-state">

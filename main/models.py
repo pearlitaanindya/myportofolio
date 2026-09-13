@@ -13,6 +13,7 @@ class Experience(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
+    organization = models.TextField(default="", blank=True)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.URLField(blank=True, null=True)
@@ -28,7 +29,7 @@ class Experience(models.Model):
 class Education(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     degree = models.CharField(max_length=255)
-    gpa = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
+    gpa = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     school = models.TextField()
     thumbnail = models.URLField(blank=True, null=True)
     started_at = models.DateField()
