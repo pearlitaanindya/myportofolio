@@ -7,10 +7,12 @@
 :root {
     --ink: #1c1917;
     --paper: #faf8f0;
-    --accent: #c488cc;
+    --accent: #e4a3eb;
     --accent-dark: #c488cc;
     --line: #e0c2ff;
     --fill: #fcedbe;
+    --card: #fcf7e6;
+    --card-gradient-light:#eeeeac;
     --text-muted: #6b6459;
     --radius: 4px;
 }
@@ -370,12 +372,51 @@ nav a:hover{
     gap: 1rem;
 }
 
+@property --deg{
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
 .card {
+     --hue-1: 290;
+    --hue-2: 50;
     padding: 1.25rem;
     background-color: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border: 4px solid transparent;
+    border-radius: 20px;
+    position: relative;
+    isolation: isolate;
 }
+
+.card::before, 
+.card::after{
+    content: "";
+    position: absolute;
+    inset: -4px;
+    background: conic-gradient(
+        from var(--deg) at center,
+        var(--card),
+        var(--card-gradient-light),
+        var(--card-gradient-light),
+        var(--card)
+    );
+    border-radius: inherit;
+    z-index: -1;
+    padding: 2px;
+    animation: autoRotate 2s linear infinite;
+}
+
+.card::after{
+    filter: blur(10px);
+}
+
+@keyframes autoRotate {
+    to{
+        --deg: 360deg;
+    }
+}
+
 
 .card-category {
     color: var(--accent-dark);
