@@ -22,7 +22,6 @@ class MainTest(TestCase):
 
     def test_main_url_is_accessible(self):
         response = self.client.get(reverse("main:show_main"))
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
         self.assertNotContains(response, self.experience.title)
@@ -30,7 +29,6 @@ class MainTest(TestCase):
 
     def test_nonexistent_page_returns_404(self):
         response = self.client.get("/halaman-yang-tidak-ada/")
-
         self.assertEqual(response.status_code, 404)
 
     def test_experience_model(self):
@@ -40,7 +38,6 @@ class MainTest(TestCase):
 
     def test_experience_page(self):
         response = self.client.get(reverse("main:show_experience"))
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
         self.assertContains(response, self.experience.title)
@@ -53,14 +50,12 @@ class MainTest(TestCase):
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
-
         self.assertContains(response, "No experience added yet.")
 
     def test_completed_experience(self):
         self.experience.ended_at = "2026-09-10"
         self.experience.save()
         response = self.client.get(reverse("main:show_experience"))
-
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "September 2026")
         self.assertNotContains(response, "Present")
@@ -69,11 +64,10 @@ class MainTest(TestCase):
             self.assertEqual(str(self.education), "Bachelor of Computer Science")
             self.assertEqual(self.education.gpa, 3.62)
             self.assertEqual(self.education.school, "Universitas Indonesia")
-            self.assertTrue(self.experience.is_ongoing)
+            self.assertTrue(self.education.is_ongoing)
 
     def test_education_page(self):
             response = self.client.get(reverse("main:show_education"))
-    
             self.assertEqual(response.status_code, 200)
             self.assertTemplateUsed(response, "education.html")
             self.assertContains(response, self.education.degree)
@@ -91,7 +85,6 @@ class MainTest(TestCase):
             self.education.ended_at = "2026-10-01"
             self.education.save()
             response = self.client.get(reverse("main:show_education"))
-    
             self.assertFalse(self.education.is_ongoing)
             self.assertContains(response, "October 2026")
             self.assertNotContains(response, "Present")
