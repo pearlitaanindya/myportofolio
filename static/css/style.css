@@ -348,11 +348,13 @@ nav a:hover{
     }
 }
 
+/* tata letak dan jarak section */
 .portofolio-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
 
+/* label text kecil di atas judul section */
 .section-kicker {
     color: var(--accent-dark);
     font-size: 0.8rem;
@@ -361,23 +363,28 @@ nav a:hover{
     text-transform: uppercase;
 }
 
+/* CSS heading1 per section portofolio */
 .portofolio-section h1 {
     margin: 0.4rem 0 1.5rem;
     font-size: 2rem;
 }
 
+/* atur card dalam bentuk grid */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
 }
 
+/* custom property untuk sudut rotasi */
 @property --deg{
     syntax: '<angle>';
     inherits: true;
     initial-value: 0deg;
 }
 
+
+/* bentuk dan warna card */ 
 .card {
     padding: 1.25rem;
     background-color: #fff;
@@ -391,6 +398,7 @@ nav a:hover{
     align-items: flex-start;
 }
 
+/* warna gradient pada card */ 
 .card::before, 
 .card::after{
     content: "";
@@ -409,10 +417,12 @@ nav a:hover{
     animation: autoRotate 2s linear infinite;
 }
 
+/* efek blur pada card */
 .card::after{
     filter: blur(10px);
 }
 
+/* animasi untuk gradient card */
 @keyframes autoRotate {
     to{
         --deg: 360deg;
@@ -420,6 +430,7 @@ nav a:hover{
 }
 
 
+/* CSS untuk kategori card (contoh: category pada experience) */
 .card-category {
     color: var(--accent-dark);
     font-size: 0.75rem;
@@ -427,11 +438,13 @@ nav a:hover{
     text-transform: uppercase;
 }
 
+/* CSS untuk heading 2 */
 .card h2 {
     margin: 0.25rem 0 0.5rem;
     font-size: 1.25rem;
 }
 
+/* CSS untuk icon logo pada card */
 .card-image {
     width: 56px;
     height: 56px;
@@ -440,11 +453,13 @@ nav a:hover{
     flex-shrink: 0;
 }
 
+/* set warna untuk text dan empty state seperti Present pada Education dan Experience */
 .card-text,
 .empty-state {
     color: var(--text-muted);
 }
 
+/* CSS untuk footer pada card */
 .card-footer {
     margin-top: 1rem;
     font-size: 0.85rem;

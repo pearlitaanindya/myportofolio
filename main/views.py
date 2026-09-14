@@ -24,6 +24,7 @@ def show_experience(request):
     }
     return render(request, "experience.html", context)
 
+# fungsi untuk men-show data education yang di-request
 def show_education(request):
     context = {
         "name" : "Pearlita Anindya Prameswari", 

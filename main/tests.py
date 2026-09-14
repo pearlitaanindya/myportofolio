@@ -60,12 +60,14 @@ class MainTest(TestCase):
         self.assertContains(response, "September 2026")
         self.assertNotContains(response, "Present")
 
+    # unit test untuk education model --> men-test tiap atribut/item
     def test_education_model(self):
             self.assertEqual(str(self.education), "Bachelor of Computer Science")
             self.assertEqual(self.education.gpa, 3.62)
             self.assertEqual(self.education.school, "Universitas Indonesia")
             self.assertTrue(self.education.is_ongoing)
 
+    # unit test untuk education page
     def test_education_page(self):
             response = self.client.get(reverse("main:show_education"))
             self.assertEqual(response.status_code, 200)
@@ -76,11 +78,13 @@ class MainTest(TestCase):
             self.assertContains(response, "Present")
             self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
+    # unit test empty education page
     def test_empty_education_page(self):
             Education.objects.all().delete()
             response = self.client.get(reverse("main:show_education"))
             self.assertContains(response, "No education added yet.")
 
+    # unit test education yang sudah completed
     def test_completed_education(self):
             self.education.ended_at = "2026-10-01"
             self.education.save()

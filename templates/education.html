@@ -28,9 +28,11 @@
             <h1>Education</h1>
 
             <div class="card-grid">
+                /* loop item education di dalam education_list */
                 {% for education in education_list %}
                     <article class="card">
 
+                        /* aturan apabila ada thumbnail tampilkan, apabila tidak kosong */
                         {% if education.thumbnail %}
                             <img src="{{ education.thumbnail }}" alt="{{ education.title }}" class= "card-image">
                         {% endif %}
@@ -48,7 +50,10 @@
                             </p>
 
                             <p class="card-footer">
+                                /* cara menampilkan text periode riwayat pendidikan */
                                 {{ education.started_at|date:"F Y" }} - 
+
+                                /* cara menampilkan text apabila riwayat pendidikan masih ongoing dan tidak */
                                 {% if education.is_ongoing %}
                                     Present
                                 {% else %}
@@ -58,6 +63,7 @@
                         </div>
                         
                     </article>
+                /* empty state */
                 {% empty %}
                     <p class="empty-state">
                         No education added yet.
