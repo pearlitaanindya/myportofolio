@@ -11,7 +11,7 @@ def show_main(request):
         "study_program": "S1 Sistem Informasi",
         "bio": (
             "Information Systems student at Universitas Indonesia, passionate about Product Management and Digital Marketing."
-            "Currently a teaching assistant of Business and Technical Communications."
+            " Currently a teaching assistant of Business and Technical Communications."
         ),
     }
     return render(request, "index.html", context)
