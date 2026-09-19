@@ -60,6 +60,9 @@
                             </p>
                             <div class="project-card-actions">
                                 <div class="project-actions">
+                                    <a href="{ % url 'main:update_experience' experience.id %}"> 
+                                        Edit
+                                    </a>
                                     {% include "components/experience_delete_modal.html" with experience=experience %}
                                 </div>
                             </div>
