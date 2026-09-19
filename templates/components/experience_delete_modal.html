@@ -2,9 +2,9 @@
     <button type="button"
             class="button button-danger"
             popovertarget="delete-experience-{{ experience.id }}"
-            aria-label="Hapus {{ experience.title }}"
-            title="Hapus pengalaman">
-        Hapus Pengalaman
+            aria-label="Delete {{ experience.title }}"
+            title="Delete Experience">
+        Delete Experience
     </button>
 </p>
 
@@ -19,23 +19,23 @@
             class="experience-delete-modal__backdrop"
             popovertarget="delete-experience-{{ experience.id }}"
             popovertargetaction="hide"
-            aria-label="Tutup konfirmasi hapus"></button>
+            aria-label="Close delete confirmation"></button>
 
     <div class="experience-delete-modal__content">
         <button type="button"
                 class="experience-delete-modal__close"
                 popovertarget="delete-experience-{{ experience.id }}"
                 popovertargetaction="hide"
-                aria-label="Tutup konfirmasi hapus">
+                aria-label="Close delete confirmation">
             ×
         </button>
 
         <h2 id="delete-experience-title-{{ experience.id }}">
-            Hapus Pengalaman?
+            Delete Experience?
         </h2>
 
         <p>
-            Apakah Anda yakin ingin menghapus
+            Are you sure you want to delete 
             <strong>{{ experience.title }}</strong>?
         </p>
 
@@ -44,14 +44,14 @@
                     class="button button-secondary"
                     popovertarget="delete-experience-{{ experience.id }}"
                     popovertargetaction="hide">
-                Batal
+                Cancel
             </button>
 
             <form method="post"
                   action="{% url 'main:delete_experience' experience.id %}">
                 {% csrf_token %}
                 <button type="submit" class="button button-danger">
-                    Ya, Hapus
+                            Delete
                 </button>
             </form>
         </div>
