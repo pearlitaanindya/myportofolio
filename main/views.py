@@ -19,10 +19,25 @@ def create_experience(request):
     context = {
         "name": "Pearlita Anindya Prameswari",
         "form": form,
+        "update" : False,
     }
     return render(request, "experience_form.html", context)
 
+def update_experience(request, experience_id):
+    experience = Experience.objects.get(id=experience_id) # ambil id experience yang mau di-update dengan .get
+    form = ExperienceForm(request.POST or None, instance=experience) # masukin data lama ke form dengan instance
 
+    if request.method == "POST" and form.is_valid():
+            form.save()
+            messages.success(request, "Experience has been updated successfully!")
+            return redirect("main:show_experience")
+    
+    context = {
+        "name": "Pearlita Anindya Prameswari",
+        "form": form,
+        "update" : True,
+    }
+    return render(request, "experience_form.html", context)
 
 def show_main(request):
     context = {
