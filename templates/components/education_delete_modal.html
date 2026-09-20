@@ -1,54 +1,54 @@
 <p class="section-status">
     <button type="button"
             class="button button-danger"
-            popovertarget="delete-experience-{{ experience.id }}"
-            aria-label="Delete {{ experience.title }}"
-            title="Delete Experience">
-        Delete Experience
+            popovertarget="delete-education-{{ education.id }}"
+            aria-label="Delete {{ education.degree }}"
+            title="Delete Education">
+        Delete Education
     </button>
 </p>
 
-<div id="delete-experience-{{ experience.id }}"
+<div id="delete-education-{{ education.id }}"
      class="section-delete-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
-     aria-labelledby="delete-experience-title-{{ experience.id }}">
+     aria-labelledby="delete-education-title-{{ education.id }}">
 
     <button type="button"
             class="section-delete-modal__backdrop"
-            popovertarget="delete-experience-{{ experience.id }}"
+            popovertarget="delete-education-{{ education.id }}"
             popovertargetaction="hide"
             aria-label="Close delete confirmation"></button>
 
     <div class="section-delete-modal__content">
         <button type="button"
-                class="section-delete-modal__close"
-                popovertarget="delete-experience-{{ experience.id }}"
+                class="education-delete-modal__close"
+                popovertarget="delete-education-{{ education.id }}"
                 popovertargetaction="hide"
                 aria-label="Close delete confirmation">
             ×
         </button>
 
-        <h2 id="delete-experience-title-{{ experience.id }}">
-            Delete Experience?
+        <h2 id="delete-section-title-{{ education.id }}">
+            Delete Education?
         </h2>
 
         <p>
             Are you sure you want to delete 
-            <strong>{{ experience.title }}</strong>?
+            <strong>{{ education.degree }}</strong>?
         </p>
 
         <div class="section-delete-modal__actions">
             <button type="button"
                     class="button button-secondary"
-                    popovertarget="delete-experience-{{ experience.id }}"
+                    popovertarget="delete-education-{{ education.id }}"
                     popovertargetaction="hide">
                 Cancel
             </button>
 
             <form method="post"
-                  action="{% url 'main:delete_experience' experience.id %}">
+                  action="{% url 'main:delete_education' education.id %}">
                 {% csrf_token %}
                 <button type="submit" class="button button-danger">
                             Delete

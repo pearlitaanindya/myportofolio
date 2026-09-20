@@ -2,9 +2,9 @@
 {% block meta %}
     <title>
         {% if update %}
-            Edit Experience - {{ name }}
+            Edit Education - {{ name }}
         {% else %}
-            Add Experience - {{ name }}
+            Add Education - {{ name }}
         {% endif %}
     </title>
 {% endblock meta %}
@@ -14,9 +14,9 @@
             <div class="container">
                 <h1>
                     {% if update %}
-                        Edit Experience
+                        Edit Education
                     {% else %}
-                        Add New Experience
+                        Add New Education
                     {% endif %}
                 </h1>
                 <form method="post" class="section-form">
@@ -34,10 +34,10 @@
                         {% if update %}
                             Save Changes
                         {% else %}
-                            Add Experience
+                            Add Education
                         {% endif%}
                     </button>
-                    <a href="{% url 'main:show_experience' %}" class="button button-secondary">Cancel</a>
+                    <a href="{% url 'main:show_education' %}" class="button button-secondary">Cancel</a>
                 </form>
             </div>
         </section>
