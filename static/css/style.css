@@ -525,8 +525,8 @@ nav a:hover{
     background: var(--ink);
 }
 
-/* experience */
-.project-header {
+/* experience and education */
+.section-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -535,28 +535,28 @@ nav a:hover{
     margin-bottom: 1.5rem;
 }
 
-.project-header h1 {
+.section-header h1 {
     margin-bottom: 0;
 }
 
-.project-add-button {
+.section-add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.project-add-button span {
+.section-add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
-.project-search {
+.section-search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.project-search__input {
+.section-search__input {
     width: 100%;
     min-width: 0;
     padding: 0.7rem;
@@ -567,12 +567,12 @@ nav a:hover{
     font: inherit;
 }
 
-.project-search__input:focus {
+.section-search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
 
-.project-actions {
+.section-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -580,18 +580,18 @@ nav a:hover{
     margin-top: 1rem;
 }
 
-.project-actions .button {
+.section-actions .button {
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.project-card-actions {
+.section-card-actions {
     display: flex;
     flex-direction: column;
     margin-top: auto;
 }
 
-.project-actions .experience-status {
+.section-actions .experience-status {
     margin-top: 0;
 }
 
@@ -672,21 +672,21 @@ nav a:hover{
 }
 
 @media (max-width: 600px) {
-    .project-header {
+    .section-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .project-add-button {
+    .section-add-button {
         width: 100%;
         justify-content: center;
     }
 
-    .project-search {
+    .section-search {
         flex-direction: column;
     }
 
-    .project-search .button {
+    .section-search .button {
         width: 100%;
     }
 
