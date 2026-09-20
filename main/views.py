@@ -98,12 +98,12 @@ def show_education(request):
         json_response.content.decode("utf-8"),
     )
     educations = [education.object for education in educations]
-    title_query = request.GET.get("title", "").strip()
+    degree_query = request.GET.get("degree", "").strip()
     
     context = {
         "name": "Pearlita Anindya Prameswari",
         "education_list": educations,
-        "title_query": title_query,
+        "degree_query": degree_query,
     }
     return render(request, "education.html", context)
 
@@ -123,14 +123,14 @@ def create_education(request):
     return render(request, "education_form.html", context)
 
 def get_education_json(request):
-    title_query = request.GET.get("title", "").strip()
+    degree_query = request.GET.get("degree", "").strip()
     educations = Education.objects.all()
 
-    if title_query:
-        educations = educations.filter(title__icontains=title_query)
+    if degree_query:
+        educations = educations.filter(degree__icontains=degree_query)
 
-    experiences_json = serializers.serialize("json", educations)
-    return HttpResponse(experiences_json, content_type="application/json")
+    educations_json = serializers.serialize("json", educations)
+    return HttpResponse(educations_json, content_type="application/json")
 
 def delete_education(request, education_id):
     education = get_object_or_404(Experience, ek=education_id)

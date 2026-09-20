@@ -20,8 +20,8 @@
                 action="{% url 'main:show_education' %}"
                 class="section-search">
                 <input type="search"
-                    name="title"
-                    value="{{ title_query }}"
+                    name="degree"
+                    value="{{ degree_query }}"
                     placeholder="Search by degree"
                     class="section-search__input"
                     aria-label="Search by degree">
@@ -36,7 +36,7 @@
 
                         <!-- /* aturan apabila ada thumbnail tampilkan, apabila tidak kosong */ -->
                         {% if education.thumbnail %}
-                            <img src="{{ education.thumbnail }}" alt="{{ education.title }}" class= "card-image">
+                            <img src="{{ education.thumbnail }}" alt="{{ education.degree }}" class= "card-image">
                         {% endif %}
 
                         <div class="card-content">
