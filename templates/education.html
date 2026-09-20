@@ -62,6 +62,11 @@
                                     {{ education.ended_at|date:"F Y" }}
                                 {% endif %}
                             </p>
+                            <div class="section-card-actions">
+                                <div class="section-actions">
+                                    {% include "components/education_delete_modal.html" with education=education %}
+                                </div>
+                            </div>
                         </div>
                         
                     </article>

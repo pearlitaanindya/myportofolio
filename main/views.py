@@ -131,3 +131,13 @@ def get_education_json(request):
 
     experiences_json = serializers.serialize("json", educations)
     return HttpResponse(experiences_json, content_type="application/json")
+
+def delete_education(request, education_id):
+    education = get_object_or_404(Experience, ek=education_id)
+
+    if request.method == "POST":
+        education.delete()
+        messages.success(request, "Education has been deleted succesfully!")
+        return redirect("main:show_education")
+
+    return redirect("main:show_education")
