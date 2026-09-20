@@ -711,10 +711,4 @@ nav a:hover{
         text-align: center;
     }
 
-    .form-group input,
-    .form-group textarea,
-    .button {
-        font-size: 16px;
-    }
-
 }
