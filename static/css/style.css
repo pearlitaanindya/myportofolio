@@ -710,4 +710,11 @@ nav a:hover{
         width: 100%;
         text-align: center;
     }
+
+    .form-group input,
+    .form-group textarea,
+    .button {
+        font-size: 16px;
+    }
+
 }
