@@ -64,6 +64,9 @@
                             </p>
                             <div class="section-card-actions">
                                 <div class="section-actions">
+                                    <a href="{% url 'main:update_education' education.id %}" class="button"> 
+                                        Edit Education
+                                    </a>
                                     {% include "components/education_delete_modal.html" with education=education %}
                                 </div>
                             </div>

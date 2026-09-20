@@ -141,3 +141,19 @@ def delete_education(request, education_id):
         return redirect("main:show_education")
 
     return redirect("main:show_education")
+
+def update_education(request, education_id):
+    education = Education.objects.get(id=education_id) # ambil id education yang mau di-update dengan .get
+    form = EducationForm(request.POST or None, instance=education) # masukin data lama ke form dengan instance
+    
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Education has been updated successfully!")
+        return redirect("main:show_education")
+        
+    context = {
+        "name": "Pearlita Anindya Prameswari",
+        "form": form,
+        "update" : True,
+    }
+    return render(request, "education_form.html", context)
