@@ -466,7 +466,7 @@ nav a:hover{
     font-weight: 600;
 }
 
-.experience-form {
+.section-form {
     width: 100%;
     max-width: 100%;
     margin-top: 1.5rem;
@@ -525,7 +525,7 @@ nav a:hover{
     background: var(--ink);
 }
 
-/* experience and education */
+/* experience and education + form */
 .section-header {
     width: 100%;
     display: flex;
@@ -595,6 +595,7 @@ nav a:hover{
     margin-top: 0;
 }
 
+/* delete modal  */
 .experience-delete-modal {
     display: none;
     position: fixed;
