@@ -596,7 +596,7 @@ nav a:hover{
 }
 
 /* delete modal  */
-.experience-delete-modal {
+.section-delete-modal {
     display: none;
     position: fixed;
     inset: 0;
@@ -613,11 +613,11 @@ nav a:hover{
     justify-content: center;
 }
 
-.experience-delete-modal:popover-open {
+.section-delete-modal:popover-open {
     display: flex;
 }
 
-.experience-delete-modal__backdrop {
+.section-delete-modal__backdrop {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -628,7 +628,7 @@ nav a:hover{
     cursor: default;
 }
 
-.experience-delete-modal__content {
+.section-delete-modal__content {
     position: relative;
     z-index: 1;
     width: min(100%, 480px);
@@ -639,7 +639,7 @@ nav a:hover{
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
 }
 
-.experience-delete-modal__content h2 {
+.section-delete-modal__content h2 {
     margin: 0 0 0.75rem;
     font-family:
         "Space Grotesk",
@@ -648,7 +648,7 @@ nav a:hover{
     font-size: 1.5rem;
 }
 
-.experience-delete-modal__close {
+.section-delete-modal__close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -661,7 +661,7 @@ nav a:hover{
     cursor: pointer;
 }
 
-.experience-delete-modal__actions {
+.section-delete-modal__actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
@@ -691,22 +691,22 @@ nav a:hover{
         width: 100%;
     }
 
-    .experience-delete-modal {
+    .section-delete-modal {
         align-items: flex-end;
         padding: 0;
     }
 
-    .experience-delete-modal__content {
+    .section-delete-modal__content {
         width: 100%;
         padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
     }
 
-    .experience-delete-modal__actions {
+    .section-delete-modal__actions {
         flex-direction: column-reverse;
     }
 
-    .experience-delete-modal__actions .button {
+    .section-delete-modal__actions .button {
         width: 100%;
         text-align: center;
     }
