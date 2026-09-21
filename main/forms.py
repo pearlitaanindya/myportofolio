@@ -62,6 +62,7 @@ class ExperienceForm(ModelForm):
             ),
         }
 
+# form education
 class EducationForm(ModelForm):
     class Meta:
         model = Education

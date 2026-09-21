@@ -20,7 +20,7 @@ def show_main(request):
     }
     return render(request, "index.html", context)
 
-
+# fungsi buat data experience
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
 
@@ -36,6 +36,7 @@ def create_experience(request):
     }
     return render(request, "experience_form.html", context)
 
+# fungsi update data experience
 def update_experience(request, experience_id):
     experience = Experience.objects.get(id=experience_id) # ambil id experience yang mau di-update dengan .get
     form = ExperienceForm(request.POST or None, instance=experience) # masukin data lama ke form dengan instance
@@ -52,7 +53,7 @@ def update_experience(request, experience_id):
     }
     return render(request, "experience_form.html", context)
 
-
+# fungsi menampilkan experience
 def show_experience(request):
     json_response = get_experience_json(request)
 
@@ -70,6 +71,7 @@ def show_experience(request):
     }
     return render(request, "experience.html", context)
 
+# fungsi ambil data experience dalam format JSON
 def get_experience_json(request):
     title_query = request.GET.get("title", "").strip()
     experiences = Experience.objects.all()
@@ -80,6 +82,7 @@ def get_experience_json(request):
     experiences_json = serializers.serialize("json", experiences)
     return HttpResponse(experiences_json, content_type="application/json")
 
+# fungsi hapus data experience
 def delete_experience(request, experience_id):
     experience = get_object_or_404(Experience, ek=experience_id)
 
@@ -107,6 +110,7 @@ def show_education(request):
     }
     return render(request, "education.html", context)
 
+# fungsi untuk buat education
 def create_education(request):
     form = EducationForm(request.POST or None)
 
@@ -122,6 +126,7 @@ def create_education(request):
     }
     return render(request, "education_form.html", context)
 
+# fungsi ambil data education dalam format JSON
 def get_education_json(request):
     degree_query = request.GET.get("degree", "").strip()
     educations = Education.objects.all()
@@ -132,6 +137,7 @@ def get_education_json(request):
     educations_json = serializers.serialize("json", educations)
     return HttpResponse(educations_json, content_type="application/json")
 
+#fungsi delete education
 def delete_education(request, education_id):
     education = get_object_or_404(Experience, ek=education_id)
 
@@ -142,6 +148,7 @@ def delete_education(request, education_id):
 
     return redirect("main:show_education")
 
+# fungsi update education
 def update_education(request, education_id):
     education = Education.objects.get(id=education_id) # ambil id education yang mau di-update dengan .get
     form = EducationForm(request.POST or None, instance=education) # masukin data lama ke form dengan instance

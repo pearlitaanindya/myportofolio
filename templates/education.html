@@ -9,6 +9,7 @@
             <p class="section-kicker">My Academic Journey!</p>
             <div class="section-header">
                 <h1>Education</h1>
+                <!-- button add education -->
                 <a href="{% url 'main:create_education' %}"
                 class="button section-add-button">
                     <span aria-hidden="true">+</span>
@@ -16,6 +17,7 @@
                 </a>
             </div>
 
+            <!-- search and filtering form  -->
             <form method="get"
                 action="{% url 'main:show_education' %}"
                 class="section-search">

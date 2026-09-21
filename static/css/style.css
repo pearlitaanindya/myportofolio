@@ -466,22 +466,26 @@ nav a:hover{
     font-weight: 600;
 }
 
+/* form layout */
 .section-form {
     width: 100%;
     max-width: 100%;
     margin-top: 1.5rem;
 }
 
+/* form field container */
 .form-group {
     margin-bottom: 1.25rem;
 }
 
+/* form field label */
 .form-group label {
     display: block;
     margin-bottom: 0.4rem;
     font-weight: 700;
 }
 
+/* style untuk form input dan textarea */
 .form-group input,
 .form-group textarea {
     width: 100%;
@@ -495,18 +499,21 @@ nav a:hover{
         outline-color 0.2s ease;
 }
 
+/* focus state untuk input dan textarea */
 .form-group input:focus,
 .form-group textarea:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
 
+/* untuk error message */
 .form-error {
     color: #b42318;
     font-size: 0.85rem;
     margin-top: 0.35rem;
 }
 
+/* general button */
 .button {
     display: inline-block;
     height: fit-content;
@@ -521,11 +528,14 @@ nav a:hover{
     text-decoration: none;
 }
 
+/* secondary button */
 .button-secondary {
     background: var(--ink);
 }
 
 /* experience and education + form */
+
+/* header layout untuk title dan add button */
 .section-header {
     width: 100%;
     display: flex;
@@ -535,27 +545,32 @@ nav a:hover{
     margin-bottom: 1.5rem;
 }
 
+/* hapus margin bawah dari title */
 .section-header h1 {
     margin-bottom: 0;
 }
 
+/* add button */
 .section-add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
+/* untuk plus icon di dalam button */
 .section-add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
+/* search form */
 .section-search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
+/* input search */
 .section-search__input {
     width: 100%;
     min-width: 0;
@@ -567,11 +582,13 @@ nav a:hover{
     font: inherit;
 }
 
+/* focus state search input */
 .section-search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
 
+/* action buttons */
 .section-actions {
     display: flex;
     align-items: center;
@@ -580,17 +597,20 @@ nav a:hover{
     margin-top: 1rem;
 }
 
+/* size action button */
 .section-actions .button {
     font-size: 0.85rem;
     font-weight: 600;
 }
 
+/* container card action */
 .section-card-actions {
     display: flex;
     flex-direction: column;
     margin-top: auto;
 }
 
+/* hapus extra margin dari section status */
 .section-actions .section-status {
     margin-top: 0;
 }
@@ -613,10 +633,12 @@ nav a:hover{
     justify-content: center;
 }
 
+/*  pop up delete modal */
 .section-delete-modal:popover-open {
     display: flex;
 }
 
+/* backdrop */
 .section-delete-modal__backdrop {
     position: absolute;
     inset: 0;
@@ -628,6 +650,7 @@ nav a:hover{
     cursor: default;
 }
 
+/* content delete modal */
 .section-delete-modal__content {
     position: relative;
     z-index: 1;
@@ -639,6 +662,7 @@ nav a:hover{
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
 }
 
+/* title untuk delete modal */
 .section-delete-modal__content h2 {
     margin: 0 0 0.75rem;
     font-family:
@@ -648,6 +672,7 @@ nav a:hover{
     font-size: 1.5rem;
 }
 
+/* close button untuk delete modal */
 .section-delete-modal__close {
     position: absolute;
     top: 1rem;
@@ -661,6 +686,7 @@ nav a:hover{
     cursor: pointer;
 }
 
+/* action button untuk delete modal */
 .section-delete-modal__actions {
     display: flex;
     justify-content: flex-end;
@@ -668,44 +694,55 @@ nav a:hover{
     margin-top: 1.5rem;
 }
 
+/* styling delete button */
 .button-danger {
     background: #b42318;
 }
 
+/*  untuk mobile  */
 @media (max-width: 600px) {
+
+    /* stack secara vertikal */
     .section-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /*  buat add button jadi full width */
     .section-add-button {
         width: 100%;
         justify-content: center;
     }
 
+    /* stack search input dan button secara vertikal */
     .section-search {
         flex-direction: column;
     }
 
+    /* bikin search button jadi full width */
     .section-search .button {
         width: 100%;
     }
 
+    /* posisiin delete modal ada di bagian bawah screen */
     .section-delete-modal {
         align-items: flex-end;
         padding: 0;
     }
 
+    /* bikin delete modal jadi full width */
     .section-delete-modal__content {
         width: 100%;
         padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
     }
 
+    /* stack button delete modal secara vertikal */
     .section-delete-modal__actions {
         flex-direction: column-reverse;
     }
 
+    /* bikin delete modal buttons jadi full width */
     .section-delete-modal__actions .button {
         width: 100%;
         text-align: center;
