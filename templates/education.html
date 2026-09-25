@@ -10,11 +10,13 @@
             <div class="section-header">
                 <h1>Education</h1>
                 <!-- button add education -->
+                {% if user.is_superuser %} 
                 <a href="{% url 'main:create_education' %}"
                 class="button section-add-button">
                     <span aria-hidden="true">+</span>
                     Add Education
                 </a>
+                {% endif %}
             </div>
 
             <!-- search and filtering form  -->
@@ -66,10 +68,14 @@
                             </p>
                             <div class="section-card-actions">
                                 <div class="section-actions">
+                                    {% if user.is_superuser %} 
                                     <a href="{% url 'main:update_education' education.id %}" class="button"> 
                                         Edit Education
                                     </a>
-                                    {% include "components/education_delete_modal.html" with education=education %}
+                                    {% endif %}
+                                    {% if user.is_superuser %} 
+                                        {% include "components/education_delete_modal.html" with education=education %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
