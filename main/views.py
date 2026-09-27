@@ -40,17 +40,20 @@ def create_experience(request):
         messages.success(request, "New experience has been added successfully!")
         return redirect("main:show_experience")
 
+    is_editor = request.user.groups.filter(name="Editor").exists()
+
     context = {
         "name": "Pearlita Anindya Prameswari",
         "form": form,
         "update" : False,
+        "is_editor" : is_editor,
     }
     return render(request, "experience_form.html", context)
 
 # fungsi update data experience
 @login_required(login_url="/login/") 
 def update_experience(request, experience_id):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not request.user.groups.filter(name="Editor").exists():
         raise PermissionDenied
     experience = Experience.objects.get(id=experience_id) # ambil id experience yang mau di-update dengan .get
     form = ExperienceForm(request.POST or None, instance=experience) # masukin data lama ke form dengan instance
@@ -119,11 +122,14 @@ def show_education(request):
     )
     educations = [education.object for education in educations]
     degree_query = request.GET.get("degree", "").strip()
-    
+
+    is_editor = request.user.groups.filter(name="Editor").exists()
+
     context = {
         "name": "Pearlita Anindya Prameswari",
         "education_list": educations,
         "degree_query": degree_query,
+        "is_editor" : is_editor,
     }
     return render(request, "education.html", context)
 
@@ -174,7 +180,7 @@ def delete_education(request, education_id):
 # fungsi update education
 @login_required(login_url="/login/") 
 def update_education(request, education_id):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not request.user.groups.filter(name="Editor").exists():
         raise PermissionDenied
     education = Education.objects.get(id=education_id) # ambil id education yang mau di-update dengan .get
     form = EducationForm(request.POST or None, instance=education) # masukin data lama ke form dengan instance
