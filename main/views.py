@@ -154,7 +154,7 @@ def get_education_json(request):
     if degree_query:
         educations = educations.filter(degree__icontains=degree_query)
 
-    educations_json = serializers.serialize("json", educations)
+    educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True)
     return HttpResponse(educations_json, content_type="application/json")
 
 #fungsi delete education
@@ -229,7 +229,7 @@ def logout_user(request):
 
 # Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
 @login_required(login_url="/login/")
-def toggle_star(request, experience_id):
+def toggle_star_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -241,3 +241,17 @@ def toggle_star(request, experience_id):
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experience")
+
+@login_required(login_url="/login/")
+def toggle_star_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in education.starred_by.all():
+            education.starred_by.remove(request.user)
+        else:
+            education.starred_by.add(request.user)
+
+    return redirect("main:show_education")
