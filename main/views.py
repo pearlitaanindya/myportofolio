@@ -15,7 +15,7 @@ from django.core.exceptions import PermissionDenied
 import datetime
 
 def show_main(request):
-    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
+    last_login = request.COOKIES.get('last_login', 'No login session / Cookie not found')
     context = {
         "name": "Pearlita Anindya Prameswari",
         "npm": "2506547670",

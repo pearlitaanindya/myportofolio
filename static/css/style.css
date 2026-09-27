@@ -362,6 +362,22 @@ nav a:hover{
         align-self: flex-start;
     }
 
+    .hero,
+    main,
+    section:first-of-type {
+        padding-top: 80px; 
+        margin-top: 0;
+    }
+
+    .hero-identity {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .hero-kicker {
+        margin-top: 0;
+    }
+
     .hero-grid {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -391,9 +407,6 @@ nav a:hover{
         border-radius: 12px;
     }
 
-    main, .hero, section:first-of-type {
-        padding-top: 130px;
-    }
 
     .brand {
         font-size: 0.95rem;
