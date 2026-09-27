@@ -40,13 +40,10 @@ def create_experience(request):
         messages.success(request, "New experience has been added successfully!")
         return redirect("main:show_experience")
 
-    is_editor = request.user.groups.filter(name="Editor").exists()
-
     context = {
         "name": "Pearlita Anindya Prameswari",
         "form": form,
         "update" : False,
-        "is_editor" : is_editor,
     }
     return render(request, "experience_form.html", context)
 
@@ -80,11 +77,13 @@ def show_experience(request):
     )
     experiences = [experience.object for experience in experiences]
     title_query = request.GET.get("title", "").strip()
+    is_editor = request.user.groups.filter(name="Editor").exists()
 
     context = {
         "name": "Pearlita Anindya Prameswari",
         "experience_list": experiences,
         "title_query": title_query,
+        "is_editor" : is_editor,
     }
     return render(request, "experience.html", context)
 
