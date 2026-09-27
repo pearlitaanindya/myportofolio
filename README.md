@@ -105,3 +105,31 @@ Gemini memberikan suggestion terkait implementasi focus dan active pada CSS saya
 1. Beberapa saran yang diberikan oleh Generative AI perlu disesuaikan dengan struktur model, form, dan kode yang telah saya buat. Oleh karena itu, saya tidak semata-mata menggunakan seluruh kode atau solusi yang diberikan.
 2. Untuk konsultasi GitHub, Generative AI memberikan beberapa alternatif penyelesaian. Namun, saya tetap melakukan pengecekan pada kondisi *branch* dan *repository* yang saya miliki sebelum menjalankan *command* yang diberikan.
 3. Saya melakukan pengujian secara mandiri untuk memastikan implementasi Django dan perubahan pada *branch* dapat berjalan sesuai dengan kebutuhan *project*.
+
+
+### Tugas 4
+#### AI Disclosure:
+
+- **Tools yang digunakan:** ChatGPT dan Gemini
+- **Sesi percakapan**:
+  https://chatgpt.com/share/6ab938f1-7814-83ec-837c-ca6e69ebdd84
+  https://chatgpt.com/share/6ab93a29-fcf8-83ec-b61d-618540036ccc
+  https://share.gemini.google/Hb52y5PYRYt9
+
+- **Strategi Prompting**: Saya menggunakan Generative AI ChatGPT dan Gemini untuk membantu proses memahami implementasi Editor pada Django Admin dan konsultasi branching. Saya awalnya memberikan konteks terkait Tugas 4 mengenai struktur project yang sudah dibuat. Kemudian saya menyesuaikan solusi yang diberikan dengan project saya. Untuk Django, bagian spesifik yang dibantu mencakup authentication, authorization, Group Editor, fitur star, dan pembatasan akses view. Untuk Git, saya berkonsultasi mengenai branching, sinkronisasi branch dengan main, dan penyelesaian konflik dengan stash dan cherry-pick.
+
+- **Bagian Spesifik yang Dibantu**:
+
+1. Implementasi *authorization* dan role Editor menggunakan Django Group.
+2. Pengecekan hak akses Editor pada `view` dan `template`.
+3. Implementasi fitur star/unstar dan tampilan jumlah star.
+4. Pengelolaan branch Git berdasarkan fitur.
+5. Sinkronisasi *branch* dengan `main` menggunakan `git fetch`, `git merge`, dan `git pull`.
+6. Penggunaan `git stash` untuk menyimpan perubahan sementara.
+7. Penyelesaian konflik Git dan penggunaan `git cherry-pick` untuk memindahkan *commit* ke `main`.
+
+- **Keterbatasan AI & Perbaikan Mandiri**:
+
+1. Beberapa solusi perlu disesuaikan dengan struktur project dan kondisi *repository* saya sehingga tidak seluruh kode atau command dari AI digunakan secara langsung.
+2. Saya mengecek kembali kondisi branch, perubahan file, dan hasil implementasi secara mandiri dan manual sebelum menjalankan command atau menerapkan perubahan.
+3. Saya melakukan eksplorasi dan uji coba mandiri terhadap fitur Django dan memastikan perubahan Git berhasil diterapkan sesuai kebutuhan project.
