@@ -14,7 +14,10 @@
 <body>
   <header class="site-header">
     <div class="container">
-        <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+        <a href="{% url 'main:show_main' %}" class="brand">
+            <img src="https://i.pinimg.com/736x/32/93/db/3293db360ba20640aa7c506fffb869c4.jpg" alt="Rapunzel Sun" class="sun-icon" />
+            {{ name }}
+        </a>
         <nav>
             <a href="{% url 'main:show_main' %}">Profile</a>
             <a href="{% url 'main:show_experience' %}">Experience</a>
