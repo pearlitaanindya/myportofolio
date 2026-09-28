@@ -77,6 +77,7 @@ def show_experience(request):
     )
     experiences = [experience.object for experience in experiences]
     title_query = request.GET.get("title", "").strip()
+    # cek apakah user yang sedang login termasuk dalam group Editor
     is_editor = request.user.groups.filter(name="Editor").exists()
 
     context = {
@@ -122,6 +123,7 @@ def show_education(request):
     educations = [education.object for education in educations]
     degree_query = request.GET.get("degree", "").strip()
 
+    # cek apakah user yang sedang login termasuk dalam group Editor
     is_editor = request.user.groups.filter(name="Editor").exists()
 
     context = {

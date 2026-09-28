@@ -10,6 +10,7 @@
             <div class="section-header">
                 <h1>Education</h1>
                 <!-- button add education -->
+                 <!-- mengatur agar yang bisa menambah education hanya superuser -->
                 {% if user.is_superuser %} 
                 <a href="{% url 'main:create_education' %}"
                 class="button section-add-button">
@@ -68,12 +69,14 @@
                             </p>
                             <div class="section-card-actions">
                                 <div class="section-actions">
+                                    <!-- mengatur agar yang bisa mengedit education hanya superuser atau editor -->
                                     {% if user.is_superuser or is_editor %} 
                                     <a href="{% url 'main:update_education' education.id %}" class="button"> 
                                         Edit Education
                                     </a>
                                     {% endif %}
                                     {% include "components/education_star.html" with education=education %}
+                                    <!-- mengatur agar yang bisa men-delete education hanya super user -->
                                     {% if user.is_superuser %} 
                                         {% include "components/education_delete_modal.html" with education=education %}
                                     {% endif %}

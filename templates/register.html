@@ -1,31 +1,42 @@
 {% extends "base.html" %}
 {% block meta %}
+    <!-- mengatur jumlah halaman register -->
     <title>Register - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
         <section class="portofolio-section">
             <div class="container">
+                <!-- judul halaman -->
                 <h1>Create Account</h1>
+
+                <!-- form membuat akun baru -->
                 <form method="post" action="{% url 'main:register' %}" class="project-form">
                     {% csrf_token %}
+                    <!-- menampilkan error -->
                     {% for error in form.non_field_errors %}
                         <p class="form-error">{{ error }}</p>
                     {% endfor %}
+                    <!-- menampilkan tiap field pada form registrasi -->
                     {% for field in form %}
                         <div class="form-group">
+                            <!-- label untuk tiap field -->
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {{ field }}
+                            <!-- menampilkan petunjuk tambahan jika tersedia -->
                             {% if field.help_text %}
                                 <div class="form-help">{{ field.help_text }}</div>
                             {% endif %}
+                            <!-- menampilkan error pada masing-masing field -->
                             {% for error in field.errors %}
                                 <p class="form-error">{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endfor %}
+                    <!-- tombol submit -->
                     <button type="submit" class="button">Register</button>
                 </form>
+                <!-- link ke halaman login untuk user yang belum memiliki akun -->
                 <p>Already have an account? <a href="{% url 'main:login' %}">Login</a>.</p>
             </div>
         </section>

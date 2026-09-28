@@ -22,7 +22,7 @@ class Experience(models.Model):
     ended_at = models.DateField(blank=True, null=True)
     starred_by = models.ManyToManyField(
         User, related_name="starred_experience", blank=True
-    )
+    ) # user yang memberikan star pada experience
     def __str__(self):
         return self.title
     
@@ -41,7 +41,7 @@ class Education(models.Model):
     ended_at = models.DateField(blank=True, null=True) # field tanggal selesai
     starred_by = models.ManyToManyField(
         User, related_name="starred_education", blank=True
-    )
+    ) # user yang memberikan star pada education
 
     def __str__(self):
             return self.degree

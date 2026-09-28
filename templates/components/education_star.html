@@ -1,10 +1,15 @@
+<!-- form untuk menambah atau menghapus star pada education -->
 <form method="post" action="{% url 'main:toggle_star_education' education.id %}" class="star-form">
     {% csrf_token %}
+    <!-- tombol toggle star/unstar -->
     <button type="submit"
             class="button button-star{% if user in education.starred_by.all %} is-starred{% endif %}"
             title="{% if education.starred_by.all %}Starred by {{ education.starred_by.all|join:', ' }}{% else %}Be the first one to give a star!{% endif %}">
+            <!-- icon star -->
         <span aria-hidden="true">★</span>
+        <!-- menampilkan unstar jika user sudah memberi star, atau star jika belum -->
         {% if user in education.starred_by.all %}Unstar{% else %}Star{% endif %}
+        <!-- menampilkan jumlah user yang men-star -->
         <span class="star-count">{{ education.starred_by.count }}</span>
     </button>
 </form>

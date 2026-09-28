@@ -1,29 +1,39 @@
 {% extends "base.html" %}
 {% block meta %}
+    <!-- mengatur judul halaman login -->
     <title>Login - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
         <section class="portofolio-section">
             <div class="container">
+                <!-- judul halaman -->
                 <h1>Login</h1>
+                <!-- menampilkan pesan DJango messages framework -->
                 {% for message in messages %}
                     <p class="form-message">{{ message }}</p>
                 {% endfor %}
+                <!-- form untuk login ke akun -->
                 <form method="post" action="{% url 'main:login' %}" class="project-form">
                     {% csrf_token %}
+                    <!-- menampilkan tiap field pada form login -->
                     {% for field in form %}
                         <div class="form-group">
+                            <!-- label untuk tiap field -->
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {{ field }}
+
+                            <!-- menampilkan error pada masing-masing field -->
                             {% for error in field.errors %}
                                 <p class="form-error">{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endfor %}
+                    <!-- menampilkan error yang tidak terkait dengan field tertentu -->
                     {% for error in form.non_field_errors %}
                         <p class="form-error">{{ error }}</p>
                     {% endfor %}
+                    <!-- tombol submit -->
                     <button type="submit" class="button">Login</button>
                 </form>
                 <p>Don't have an account? <a href="{% url 'main:register' %}">Sign Up Here!</a></p>

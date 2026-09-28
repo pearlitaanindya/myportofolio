@@ -8,7 +8,8 @@
         <div class="container">
             <p class="section-kicker">My Journey!</p>
             <div class="section-header">
-                <h1>Experience</h1>
+                <h1>Experience</h1> 
+                <!-- mengatur agar yang bisa meng-add experience hanya super user -->
                 {% if user.is_superuser %}
                     <a href="{% url 'main:create_experience' %}"
                     class="button section-add-button">
@@ -62,12 +63,14 @@
                             </p>
                             <div class="section-card-actions">
                                 <div class="section-actions">
+                                    <!-- mengatur agar yang bisa mengedit experience hanya superuser dan editor -->
                                     {% if user.is_superuser or is_editor %} 
                                         <a href="{% url 'main:update_experience' experience.id %}" class="button"> 
                                             Edit Experience
                                         </a>
                                     {% endif %}
                                     {% include "components/experience_star.html" with experience=experience %}
+                                    <!-- mengatur agar yang bisa men-delete experience hanya superuser -->
                                     {% if user.is_superuser %} 
                                         {% include "components/experience_delete_modal.html" with experience=experience %}
                                     {% endif %}

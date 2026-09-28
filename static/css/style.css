@@ -81,6 +81,7 @@ h1, .brand {
     transition: color 0.3s ease;
 }
 
+/* penambahan icon sun pada brand di navbar */
 .sun-icon {
     width: 24px;
     height: 24px;
@@ -817,10 +818,12 @@ nav a:hover{
 
 }
 
+/* jaga supaya star form tetap satu baris */
 .star-form {
     display: inline;
 }
 
+/* atur posisi dan jarak elemen pada tombol star */
 .button-star {
     display: inline-flex;
     align-items: center;
@@ -828,10 +831,12 @@ nav a:hover{
     background: var(--ink);
 }
 
+/* ubah warna tombol kalau sudah di-star */
 .button-star.is-starred {
     background: var(--accent);
 }
 
+/* atur tampilan jumlah star */
 .star-count {
     padding: 0.05rem 0.4rem;
     border-radius: 999px;
