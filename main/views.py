@@ -169,7 +169,7 @@ def get_education_json(request):
 def delete_education(request, education_id):
     if not request.user.is_superuser:
         raise PermissionDenied
-    education = get_object_or_404(Experience, pk=education_id)
+    education = get_object_or_404(Education, pk=education_id)
 
     if request.method == "POST":
         education.delete()
