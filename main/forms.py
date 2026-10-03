@@ -142,3 +142,12 @@ class EducationForm(ModelForm):
                 }
             ),
         }
+        
+    def clean_degree(self):
+        degree = strip_tags(self.cleaned_data["degree"]).strip()
+        if not degree:
+            raise ValidationError("Degree cannot consist only of HTML tags.")
+        return degree
+    
+    def clean_school(self):
+        return strip_tags(self.cleaned_data["school"]).strip()
