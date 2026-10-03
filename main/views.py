@@ -73,10 +73,13 @@ def update_experience(request, experience_id):
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
 
+    is_editor = request.user.groups.filter(name="Editor").exists()
+
     context = {
         "name": "Pearlita Anindya Prameswari",
         "title_query": title_query,
         "form" : ExperienceForm(),
+        "is_editor" : is_editor,
     }
     return render(request, "experience.html", context)
 
@@ -127,23 +130,16 @@ def delete_experience(request, experience_id):
 
 # fungsi untuk men-show data education yang di-request
 def show_education(request):
-    json_response = get_education_json(request)
-    educations = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    educations = [education.object for education in educations]
     degree_query = request.GET.get("degree", "").strip()
 
-    # cek apakah user yang sedang login termasuk dalam group Editor
     is_editor = request.user.groups.filter(name="Editor").exists()
 
     context = {
         "name": "Pearlita Anindya Prameswari",
-        "education_list": educations,
         "degree_query": degree_query,
-        "is_editor" : is_editor,
+        "is_editor": is_editor,
     }
+
     return render(request, "education.html", context)
 
 # fungsi untuk buat education
@@ -168,11 +164,31 @@ def create_education(request):
 # fungsi ambil data education dalam format JSON
 def get_education_json(request):
     degree_query = request.GET.get("degree", "").strip()
-    educations = Education.objects.all()
+    educations = Education.objects.prefetch_related('starred_by').all()
 
     if degree_query:
         educations = educations.filter(degree__icontains=degree_query)
 
+    data = []
+    for education in educations:
+        starred_users = education.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(education.id),
+            "fields": {
+                "degree": education.degree,
+                "gpa": str(education.gpa) if education.gpa is not None else None,
+                "school": education.school,
+                "thumbnail": education.thumbnail,
+                "started_at": education.started_at.isoformat(),
+                "ended_at" : (education.ended_at.isoformat() if education.ended_at else None),
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
     educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True)
     return HttpResponse(educations_json, content_type="application/json")
 
