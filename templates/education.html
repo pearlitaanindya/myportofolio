@@ -89,6 +89,16 @@
         gridContainer.classList.toggle('hide', !showGrid);
     }
 
+    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
     // Membuat elemen card education
     function buildEducationCardElement(item) {
         const education = item.fields;
@@ -98,9 +108,9 @@
         articleElement.className = 'card';
 
         const imageHtml = education.thumbnail
-            ? `<img src="${education.thumbnail}"
-                    alt="${education.degree}"
-                    class="card-image">`
+            ? `<img src="${escapeHtml(education.thumbnail)}"
+                alt="${escapeHtml(education.degree)}"
+                class="card-image">`
             : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli
@@ -152,22 +162,22 @@
             : "Star";
 
         const starTitle = education.star_count > 0
-            ? `Dibintangi oleh ${education.starred_by_names}`
+            ? `Dibintangi oleh ${escapeHtml(education.starred_by_names)}`
             : "Jadilah yang pertama memberi star";
 
         const completeCardHtml = `
             ${imageHtml}
 
             <div class="card-content">
-                <h2>${education.degree}</h2>
+                <h2>${escapeHtml(education.degree)}</h2>
 
                 <p class="card-text"
                    style="font-weight: bold; color: var(--ink);">
-                    ${education.school}
+                    ${escapeHtml(education.school)}
                 </p>
 
                 <p class="card-text">
-                    GPA/Grade: ${education.gpa ?? "-"}
+                    GPA/Grade: ${escapeHtml(education.gpa) ?? "-"}
                 </p>
 
                 <p class="card-footer">
