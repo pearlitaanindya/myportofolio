@@ -296,7 +296,7 @@ def toggle_star_education(request, education_id):
 def create_experience_ajax(request):
     if not request.user.is_superuser:
         return JsonResponse(
-            {"message": "Hanya pemilik portofolio yang dapat menambahkan experience."},
+            {"message": "Only the portfolio owner can add an experience."},
             status=403,
         )
 
@@ -304,7 +304,25 @@ def create_experience_ajax(request):
     if form.is_valid():
         experience = form.save()
         return JsonResponse(
-            {"message": "Experience berhasil ditambahkan.", "pk": str(experience.id)},
+            {"message": "New experience has been added succesfully.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_education_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the portfolio owner can add an education."},
+            status=403,
+        )
+
+    form = EducationForm(request.POST)
+    if form.is_valid():
+        education = form.save()
+        return JsonResponse(
+            {"message": "New education has been added succesfully.", "pk": str(education.id)},
             status=201,
         )
 
