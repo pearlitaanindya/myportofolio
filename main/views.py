@@ -138,6 +138,7 @@ def show_education(request):
         "name": "Pearlita Anindya Prameswari",
         "degree_query": degree_query,
         "is_editor": is_editor,
+        "form" : EducationForm(),
     }
 
     return render(request, "education.html", context)

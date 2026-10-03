@@ -12,11 +12,12 @@
                 <!-- button add education -->
                  <!-- mengatur agar yang bisa menambah education hanya superuser -->
                 {% if user.is_superuser %} 
-                <a href="{% url 'main:create_education' %}"
-                class="button section-add-button">
+                <button type="button"
+                        class="button section-add-button"
+                        popovertarget="add-education-modal">
                     <span aria-hidden="true">+</span>
                     Add Education
-                </a>
+                </button>
                 {% endif %}
             </div>
 
@@ -52,6 +53,10 @@
         </div>
     </section>
     </main>
+
+    {% if user.is_superuser %}
+        {% include "components/education_form_modal.html" %}
+    {% endif %}
 
     <script>
     // Konfigurasi
@@ -133,7 +138,7 @@
                     <button type="submit"
                             class="button button-danger"
                             onclick="return confirm('Yakin ingin menghapus education ini?');">
-                        Hapus
+                        Delete Education
                     </button>
                </form>`
             : '';
@@ -217,6 +222,10 @@
             month: 'long',
             year: 'numeric'
         });
+    }
+
+    function closeEducationModal() {
+        document.getElementById("add-education-modal").hidePopover();
     }
 
     // Fetch data education
