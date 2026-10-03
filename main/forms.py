@@ -18,26 +18,6 @@ class ExperienceForm(ModelForm):
             "ended_at",
         ]
 
-        def clean_title(self):
-            title = strip_tags(self.cleaned_data["title"]).strip()
-
-            if not title:
-                raise ValidationError(
-                    "Judul experience tidak boleh hanya berisi tag HTML."
-                )
-
-            return title
-
-        def clean_organization(self):
-            return strip_tags(
-                self.cleaned_data["organization"]
-            ).strip()
-
-        def clean_description(self):
-            return strip_tags(
-                self.cleaned_data["description"]
-            ).strip()
-
         labels = {
             "title": "Position",
             "organization" : "Company/Organization",
@@ -85,6 +65,24 @@ class ExperienceForm(ModelForm):
             ),
         }
 
+    def clean_title(self):
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise ValidationError(
+            "Experience title cannot consist only of HTML tags.."
+        )
+        return title
+    
+    def clean_organization(self):
+        return strip_tags(
+                    self.cleaned_data["organization"]
+                ).strip()        
+    
+    def clean_description(self):
+        return strip_tags(
+            self.cleaned_data["description"]        
+            ).strip()                
+       
 # form education
 class EducationForm(ModelForm):
     class Meta:
