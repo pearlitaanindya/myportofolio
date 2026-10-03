@@ -69,6 +69,7 @@
     // Konfigurasi
     const BASE_EXPERIENCES_ENDPOINT = "{% url 'main:get_experience_json' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
     let experiencesAbortController;
 
     // Elemen DOM
@@ -121,6 +122,19 @@
                 '00000000-0000-0000-0000-000000000000',
                 experienceId
             );
+
+        const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
+            .replace(
+                '00000000-0000-0000-0000-000000000000',
+                experienceId
+            );
+
+        // Edit experience tetapi hanya untuk superuser atau Editor
+        const editHtml = (IS_SUPERUSER || IS_EDITOR)
+            ? `<a href="${updateUrl}" class="button">
+                    Edit Experience
+               </a>`
+            : '';
 
         const deleteHtml = IS_SUPERUSER
             ? `<form method="post"
@@ -189,6 +203,8 @@
 
                 <div class="section-card-actions">
                     <div class="section-actions">
+
+                        ${editHtml}
 
                         <form method="post"
                               action="${starUrl}"
