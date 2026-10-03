@@ -12,9 +12,13 @@ Website portofolio yang sudah di-deploy sekarang memiliki section profile yang b
 
 Kemudian, website yang telah di-deploy sekarang juga memiliki section yang menampilkan informasi akademik dan pengalaman saya. Pada section Experience, ditampilkan pengalaman organisasi dan pengalaman bekerja saya. Pada section Education, ditampilkan riwayat pendidikan saya, baik dari gelar, institusi, nilai (IPK), dan periode pendidikan. Data pada kedua section dikelola menggunakan model Django sehingga dapat ditampilkan secara dinamis pada halaman portofolio.
 
-Data kedua section juga dapat ditambahkan, diperbarui, dihapus, dan dicari melalui fitur yang telah terhubung dengan database Django. Proses input dan update data menggunakan Django `ModelForm`, sedangkan fitur pencarian dilakukan berdasarkan data yang dimasukkan pengguna. Website juga sekarang telah menyediakan endpoint JSON untuk mengambil data Experience dan Education melalui serialization. Dengan demikian, informasi pada portofolio tidak lagi ditulis secara statis pada HTML. Informasi sekarang dapat dikelola dan ditampilkan secara dinamis melalui Django.
+Data pada section Experience dan Education dikelola menggunakan Django Model dan database sehingga data-data ditampilkan secara dinamis. Kedua section memiliki fitur tambah, update, hapus, dan pencarian data. Proses input dan update menggunakan Django `ModelForm`, sedangkan pencarian dilakukan berdasarkan input pengguna.
 
-Website sekarang telah dilengkapi `Django Authentication` untuk registrasi, login, logout, dan menampilkan status serta sesi login terakhir. Pengunjung yang belum login tetap dapat melihat portofolio tetapo harus login untuk mengakses fitur tertentu. Website juga telah menerapkan *authorization* berdasarkan peran pengguna, yaitu pengguna biasa, Editor, dan `superuser` sebagai pemilik portofolio. Pengguna biasa dapat melihat dan memberikan atau menghapus star, Editor dapat memperbarui Experience dan Education, sedangkan `superuser` memiliki akses penuh untuk menambah, memperbarui, dan menghapus data. Pembatasan akses diterapkan pada server dan kontrol yang tidak tersedia bagi pengguna disembunyikan dari halaman. 
+Untuk meningkatkan interaktivitas halaman, Experience dan Education telah menggunakan AJAX. Data ditampilkan melalui `endpoint JSON` menggunakan `JsonResponse`, kemudian card dibangun secara dinamis menggunakan JavaScript tanpa melakukan *reload* halaman. Fitur pencarian juga menggunakan AJAX dengan *debouncing*. Proses penambahan data menggunakan modal berbasis `Popover API` dan `Fetch API`, kemudian halaman akan memuat kembali data setelah proses berhasil.
+
+Saat ini, website juga dilengkapi dengan *toast notification* untuk memberikan notifikasi/feedback atas proses yang dilakukan pengguna. Notifikasi akan muncul ketika data berhasil ditambahkan serta ketika terjadi kesalahan atau validasi form. Selain itu, diterapkan pula perlindungan XSS dengan melakukan *escaping* terhadap data yang dimasukkan ke HTML melalui JavaScript menggunakan `escapeHtml()`, serta membersihkan input form menggunakan `strip_tags`.
+
+Dari segi keamanan, qebsite sekarang telah dilengkapi `Django Authentication` untuk registrasi, login, logout, dan menampilkan status serta sesi login terakhir. Pengunjung yang belum login tetap dapat melihat portofolio tetapo harus login untuk mengakses fitur tertentu. Website juga telah menerapkan *authorization* berdasarkan peran pengguna, yaitu pengguna biasa, Editor, dan `superuser` sebagai pemilik portofolio. Pengguna biasa dapat melihat dan memberikan atau menghapus star, Editor dapat memperbarui Experience dan Education, sedangkan `superuser` memiliki akses penuh untuk menambah, memperbarui, dan menghapus data. Pembatasan akses diterapkan pada server dan kontrol yang tidak tersedia bagi pengguna disembunyikan dari halaman. 
 
 Fitur star juga sekarang tersedia pada Experience dan Education dengan maksimal satu star per pengguna, telah ditampilkan pula  jumlah serta status star, danstar form juga dilindungi `CSRF`. Data Experience dan Education dikelola secara dinamis melalui `Django Model` dan *database*, dengan fitur tambah, *update*, hapus, pencarian, serta `ModelForm`, dan tersedia endpoint `JSON` melalui *serialization* tanpa mengekspos informasi sensitif pengguna.
 
@@ -137,3 +141,26 @@ Gemini memberikan suggestion terkait implementasi focus dan active pada CSS saya
 1. Beberapa solusi perlu disesuaikan dengan struktur project dan kondisi *repository* saya sehingga tidak seluruh kode atau command dari AI digunakan secara langsung.
 2. Saya mengecek kembali kondisi branch, perubahan file, dan hasil implementasi secara mandiri dan manual sebelum menjalankan command atau menerapkan perubahan.
 3. Saya melakukan eksplorasi dan uji coba mandiri terhadap fitur Django dan memastikan perubahan Git berhasil diterapkan sesuai kebutuhan project.
+
+### Tugas 5
+1. *Debouncing* adalah penundaan eksekusi suatu fungsi sampai user berhenti melakukan suatu aktivitas selama waktu tertentu. Pada fitur pencarian yang menggunakan AJAX, *debouncing* dapat digunakan untuk mencegah pengiriman request setiap kali user mengetik satu karakter. Dengan *debouncing*, request baru akan dikirim setelah user berhenti mengetik selama beberapa saat. *Debouncing* penting untuk mengurangi jumlah request yang dikirim ke server sehingga penggunaan resource akan lebih efisien dan pencarian menjadi lebih optimal.
+
+2. `fetch()` digunakan untuk melakukan request secara asinkronus sehingga hasilnya tidak langsung tersedia saat fungsi dipanggil. Sedangkan `await` digunakan untuk menunggu sampai proses `fetch()` selesai dan menghasilkan Response sebelum kode dilanjutkan ke baris berikutnya. Dengan `await`, hasil dari request tersebut dapat digunakan secara berurutan. Jika tidak menggunakan `await`, `fetch()` tidak akan mengembalikan hasil responsenya tetapi akan mengembalikan *Promise*. Oleh sebab itu, apabila response atau data langsung digunakan, nilainya belum tersedia dan dapat menyebabkan error atau hasil yang tidak sesuai dengan yang diinginkan.
+
+3. XSS (Cross-Site Scripting) adalah serangan ketika penyerang memasukkan script atau HTML berbahaya ke data-data yang ditampilkan dan dieksekusi browser user. Data yang ditampilkan dengan AJAX/JavaScript lebih butuh diperhatikan karena data dari server sering kali dimasukkan secara langsung ke HTML dengan JavaScript (misal dengan `innerHTML`). Apabila data tersebut tidak di-*escape*, karakter `<` dan `>` dapat dianggap sebagai HTML oleh browser dan hal ini dapat menyebabkan script berbahaya ikut dijalankan. Data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini dibandingkan data yang ditampilkan melalui template Django karena Django sendiri memiliki mekanisme *escaping* otomatis ketika variabel ditampilkan dengan `{{ variable }}`. Dengan ini, HTML yang  berasal dari input pengguna secara default akan ditampilkan sebagai teks. Akan tetapi, ketika HTML dibangun dengan JavaScript, diperlulan *escaping* secara manual, contohnya dengan `escapeHtml()` agar data dari server tak dianggap sebagai kode HTML.
+
+#### AI Disclosure:
+- **Tool yang digunakan:** ChatGPT
+
+- **Sesi percakapan:** https://chatgpt.com/share/6ac13a69-56a0-83ec-a270-f5be459c5daa
+
+- **Strategi prompting:** Saya menggunakan Generative AI untuk berkonsultasi terkait branching GitHub agar proses pengembangan websiter berjalan dengan lebih terstruktur. Saya mengajukan pertanyaan mengenai pembuatan branch, perpindahan branch, proses commit, serta merge. saya tetap mengeksplorasi dan mempraktikkan branching secara langsung melalui GitHub dan Git pada project saya.
+
+- **Bagian spesifik yang dibantu:**
+
+1. Penentuan strategi *commit* selama pengerjaan fitur pada *branch* tertentu.
+2. Penamaan *branch* dan *commit message* yang sesuai dengan perubahan yang dilakukan.
+
+- **Keterbatasan AI & Perbaikan Mandiri:**
+
+1. Beberapa saran yang diberikan oleh AI tidak selalu sesuai dengan kondisi *repository* atau *workflow* yang sedang saya gunakan. Oleh karena itu, saya tidak langsung mengikuti seluruh saran yang diberikan. Saya mengecek kondisi *branch* dan *repository* secara langsung menggunakan Git, kemudian menyesuaikan langkah yang digunakan dengan kebutuhan project. Saya juga melakukan eksplorasi mandiri melalui GitHub untuk memastikan proses *branching* dan *commit* yang saya lakukan sudah sesuai.
