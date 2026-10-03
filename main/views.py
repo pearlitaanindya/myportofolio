@@ -190,8 +190,7 @@ def get_education_json(request):
                 "starred_by_names": starred_by_names,
             }
         })
-    educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True)
-    return HttpResponse(educations_json, content_type="application/json")
+    return JsonResponse(data, safe=False)
 
 #fungsi delete education
 @login_required(login_url="/login/") 
