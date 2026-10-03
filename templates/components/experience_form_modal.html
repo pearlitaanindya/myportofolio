@@ -1,4 +1,4 @@
-<div id="add-section-modal"
+<div id="add-experience-modal"
      class="section-form-modal"
      popover="auto"
      role="dialog"
@@ -6,19 +6,19 @@
      aria-labelledby="add-section-modal-title">
     <button type="button"
             class="section-form-modal__backdrop"
-            popovertarget="add-section-modal"
+            popovertarget="add-experience-modal"
             popovertargetaction="hide"
-            aria-label="Tutup form tambah proyek"></button>
+            aria-label="Close delete confirmation"></button>
 
     <div class="section-form-modal__content">
         <button type="button"
                 class="section-form-modal__close"
-                popovertarget="add-section-modal"
+                popovertarget="add-experience-modal"
                 popovertargetaction="hide"
-                aria-label="Tutup form tambah proyek">×</button>
+                aria-label="Close delete confirmation">×</button>
 
-        <h2 id="add-section-modal-title">Add New Experience</h2>
-        <form id="section-form"
+        <h2 id="add-experience-modal-title">Add New Experience</h2>
+        <form id="experience-form"
               method="post"
               action="{% url 'main:create_experience' %}"
               class="section-form">
@@ -35,9 +35,9 @@
             <div class="section-form-modal__actions">
                 <button type="button"
                         class="button button-secondary"
-                        popovertarget="add-section-modal"
-                        popovertargetaction="hide">Batal</button>
-                <button type="submit" class="button">Tambah Proyek</button>
+                        popovertarget="add-experience-modal"
+                        popovertargetaction="hide">Cancel</button>
+                <button type="submit" class="button">Add Experience</button>
             </div>
         </form>
     </div>

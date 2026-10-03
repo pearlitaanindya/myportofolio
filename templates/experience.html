@@ -3,7 +3,6 @@
     <title>{{ name }} - Experience</title>
 {% endblock meta %}
 {% block content %}
-{% include "components/experience_form_modal.html" %}
     <main>
     <section class="portofolio-section" id="experience">
         <div class="container">
@@ -14,7 +13,7 @@
                 {% if user.is_superuser %}
                     <button type="button"
                             class="button section-add-button"
-                            popovertarget="add-section-modal">
+                            popovertarget="add-experience-modal">
                         <span aria-hidden="true">+</span>
                         Add Experience
                     </button>
@@ -22,12 +21,12 @@
             </div>
 
             <div>
-                <button class="button button-secondary"
+                <!-- <button class="button button-secondary"
                         onclick="showToast('Notifikasi Sistem', 'Experience has been loaded successfully!', 'success')">
                     Test Toast Notifikasi
-                </button>
+                </button> -->
 
-                <form id="section-search-form" class="section-search">
+                <form id="experience-search-form" class="section-search">
                     <input type="search"
                         id="search-input"
                         name="title"
@@ -65,10 +64,15 @@
     </section>
     </main>
 
+    {% if user.is_superuser %}
+        {% include "components/experience_form_modal.html" %}
+    {% endif %}
+
     <script>
     // Konfigurasi
     const BASE_EXPERIENCES_ENDPOINT = "{% url 'main:get_experience_json' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
     let experiencesAbortController;
 
     // Elemen DOM
@@ -76,7 +80,7 @@
     const errorState = document.getElementById('error');
     const emptyState = document.getElementById('empty');
     const gridContainer = document.getElementById('grid');
-    const searchForm = document.getElementById('section-search-form');
+    const searchForm = document.getElementById('experience-search-form');
     const searchInput = document.getElementById('search-input');
 
     const SEARCH_DEBOUNCE_DELAY = 300;
@@ -121,6 +125,19 @@
                 '00000000-0000-0000-0000-000000000000',
                 experienceId
             );
+
+        const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
+            .replace(
+                '00000000-0000-0000-0000-000000000000',
+                experienceId
+            );
+
+        // Edit experience tetapi hanya untuk superuser atau Editor
+        const editHtml = (IS_SUPERUSER || IS_EDITOR)
+            ? `<a href="${updateUrl}" class="button">
+                    Edit Experience
+               </a>`
+            : '';
 
         const deleteHtml = IS_SUPERUSER
             ? `<form method="post"
@@ -190,6 +207,8 @@
                 <div class="section-card-actions">
                     <div class="section-actions">
 
+                        ${editHtml}
+
                         <form method="post"
                               action="${starUrl}"
                               class="star-form">
@@ -216,6 +235,10 @@
         articleElement.innerHTML = completeCardHtml;
 
         return articleElement;
+    }
+
+    function closeExperienceModal() {
+        document.getElementById("add-experience-modal").hidePopover();
     }
 
     // Fetch data experience
@@ -300,7 +323,7 @@
 
 
     const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
-    const experienceForm = document.getElementById('section-form');
+    const experienceForm = document.getElementById('experience-form');
 
     // Membaca nilai cookie, digunakan untuk mengambil token CSRF
     function getCookie(name) {
