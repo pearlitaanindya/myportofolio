@@ -373,8 +373,8 @@
                 closeExperienceModal();
 
                 showToast(
-                    'Berhasil',
-                    'Experience baru berhasil ditambahkan!',
+                    'Success',
+                    'New experience has been added!',
                     'success'
                 );
 
@@ -387,11 +387,11 @@
                         .map(error => error.message)
                     : [
                         result.message ||
-                        `Terjadi kesalahan (status ${response.status}).`
+                        `An error occurred (status ${response.status}).`
                     ];
 
                 showToast(
-                    'Gagal menambahkan experience',
+                    'Failed to add experience',
                     errorMessages.join(' '),
                     'error'
                 );
@@ -401,8 +401,8 @@
             console.error('Error adding experience:', error);
 
             showToast(
-                'Gagal menambahkan experience',
-                'Tidak dapat terhubung ke server. Silakan coba lagi.',
+                'Failed to add experience',
+                'Unable to connect to the server. Please try again..',
                 'error'
             );
 
