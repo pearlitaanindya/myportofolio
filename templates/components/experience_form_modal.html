@@ -1,9 +1,12 @@
+<!-- modal untuk menambahkan data experience -->
 <div id="add-experience-modal"
      class="section-form-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
      aria-labelledby="add-section-modal-title">
+
+    <!-- backdrop untuk menutup modal -->
     <button type="button"
             class="section-form-modal__backdrop"
             popovertarget="add-experience-modal"
@@ -11,32 +14,41 @@
             aria-label="Close delete confirmation"></button>
 
     <div class="section-form-modal__content">
+        <!-- tombol X untuk nutup modal -->
         <button type="button"
                 class="section-form-modal__close"
                 popovertarget="add-experience-modal"
                 popovertargetaction="hide"
                 aria-label="Close delete confirmation">×</button>
 
+        <!-- judul modal -->
         <h2 id="add-experience-modal-title">Add New Experience</h2>
+        <!-- form untuk menambahkan data experience -->
         <form id="experience-form"
               method="post"
               action="{% url 'main:create_experience' %}"
               class="section-form">
             {% csrf_token %}
+            <!-- tampilin seluruh field dari ExperienceForm -->
             {% for field in form %}
                 <div class="form-group">
+                    <!-- label tiap field -->
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <!-- input field dari ExperienceForm -->
                     {{ field }}
+                    <!-- tampilin error validasi jika ada error -->
                     {% for error in field.errors %}
                         <p class="form-error">{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
             <div class="section-form-modal__actions">
+                <!-- tombol batalin dan nutup modal -->
                 <button type="button"
                         class="button button-secondary"
                         popovertarget="add-experience-modal"
                         popovertargetaction="hide">Cancel</button>
+                <!-- tombol kirim form experience -->
                 <button type="submit" class="button">Add Experience</button>
             </div>
         </form>

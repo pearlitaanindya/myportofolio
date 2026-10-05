@@ -83,6 +83,7 @@
     const searchForm = document.getElementById('experience-search-form');
     const searchInput = document.getElementById('search-input');
 
+    // konfigurasi waktu debounce
     const SEARCH_DEBOUNCE_DELAY = 300;
     let searchDebounceTimer;
 
@@ -101,44 +102,50 @@
 
     // Membuat elemen card experience
     function buildExperienceCardElement(item) {
+        // ambil data field dan ID dari data JSON
         const experience = item.fields;
         const experienceId = item.pk;
 
+        // buat elemen article sebagai container card
         const articleElement = document.createElement('article');
         articleElement.className = 'card';
 
+        // tampilin gambar kalo ada thumbnail
         const imageHtml = experience.thumbnail
             ? `<img src="${escapeHtml(experience.thumbnail)}"
                     alt="${escapeHtml(experience.title)}"
                     class="card-image">`
             : '';
 
-
+        // buat url untuk hapus experience
         const deleteUrl = "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}"
             .replace(
                 '00000000-0000-0000-0000-000000000000',
                 experienceId
             );
 
+        // buat url untuk toggle star experience
         const starUrl = "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}"
             .replace(
                 '00000000-0000-0000-0000-000000000000',
                 experienceId
             );
 
+        // buat url untuk edit experience
         const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
             .replace(
                 '00000000-0000-0000-0000-000000000000',
                 experienceId
             );
 
-        // Edit experience tetapi hanya untuk superuser atau Editor
+        // edit experience tetapi hanya untuk superuser atau Editor
         const editHtml = (IS_SUPERUSER || IS_EDITOR)
             ? `<a href="${updateUrl}" class="button">
                     Edit Experience
                </a>`
             : '';
 
+        // delete hanya untuk superuser
         const deleteHtml = IS_SUPERUSER
             ? `<form method="post"
                     action="${deleteUrl}"
@@ -152,18 +159,22 @@
             </form>`
             : '';
 
+        // tentuin teks tombol berdasarkan status star
         const isStarredClass = experience.is_starred
             ? " is-starred"
             : "";
 
+        // tentuin teks tombol berdasarkan status star
         const starText = experience.is_starred
             ? "Unstar"
             : "Star";
 
+        // tentuin tooltip berdasarkan jumlah user yang ngasih star
         const starTitle = experience.star_count > 0
             ? `Starred by ${escapeHtml(experience.starred_by_names)}`
             : "Be the first to star this experience";
             
+        // format tanggal mulai jadi "Month Year"
         const formattedStartDate = new Date(
             experience.started_at
         ).toLocaleDateString('en-US', {
@@ -171,6 +182,7 @@
             year: 'numeric'
         });
 
+        // format tanggal mulai jadi "Month Year", kalo belum selesai tampilin "Present"
         const formattedEndDate = experience.ended_at
             ? new Date(experience.ended_at).toLocaleDateString('en-US', {
                 month: 'long',
@@ -179,6 +191,7 @@
             : "Present";
 
         
+        // buat struktur HTML lengkap untuk card experience
         const completeCardHtml = `
             ${imageHtml}
 
@@ -232,32 +245,40 @@
             </div>
         `;
 
+        // masukin struktur HTML card ke dalam elemen article
         articleElement.innerHTML = completeCardHtml;
 
+        // kembaliin elemen card yang sudah dibuat
         return articleElement;
     }
 
+    // tutup modal tambah experience dengan popover API
     function closeExperienceModal() {
         document.getElementById("add-experience-modal").hidePopover();
     }
 
     // Fetch data experience
     async function fetchExperiences(searchQuery = "") {
+        // batalin request sebelumnya kalo masih jalan
         if (experiencesAbortController) {
             experiencesAbortController.abort();
         }
 
+        // buat AbortController baru untuk request sekarang
         experiencesAbortController = new AbortController();
 
         try {
+            // tampilin loading state salama data diambil
             displayPageSection({
                 showLoading: true
             });
 
+            // buat URL endpoint berdasarkan keyword search
             const url = searchQuery
                 ? `${BASE_EXPERIENCES_ENDPOINT}?title=${encodeURIComponent(searchQuery)}`
                 : BASE_EXPERIENCES_ENDPOINT;
 
+            // kirim reqyest GET ke endpoint experience dan minta response dalam format JSON
             const response = await fetch(url, {
                 headers: {
                     'Accept': 'application/json'
@@ -265,37 +286,46 @@
                 signal: experiencesAbortController.signal,
             });
 
+            // kalo response ga berhasil, lempar error
             if (!response.ok) {
                 throw new Error('Failed to fetch experience data');
             }
 
+            // ubah response JSON jadi data JavaScript
             const experienceData = await response.json();
 
+            // kalo gaada datayang ditemuin, tampilin empty state
             if (experienceData.length === 0) {
                 displayPageSection({
                     showEmpty: true
                 });
             } else {
+                // hapus card yang sebelumnya ada di grid
                 gridContainer.innerHTML = '';
 
+                // buat card untuk tiap data experience
                 experienceData.forEach(item => {
                     gridContainer.appendChild(
                         buildExperienceCardElement(item)
                     );
                 });
 
+                // tampilin grid setelah data berhasil dimuat
                 displayPageSection({
                     showGrid: true
                 });
             }
 
         } catch (error) {
+            // request yang dibatalin tidak dianggap sebagai error
             if (error.name === 'AbortError') {
                 return;
             }
 
+            // tampilin errorpada console untuk debug
             console.error('Error loading experiences:', error);
 
+            // tampilin error state kepada user
             displayPageSection({
                 showError: true
             });
@@ -303,10 +333,12 @@
     }
 
     // Event Handler untuk Search
+    // ambil data berdasarkan keyword
    function searchExperience() {
     fetchExperiences(searchInput.value.trim());
     }
 
+    // jalanin pencarian setelah user berhenti ngetik selaam waktu yang udah ditentukan
     searchInput.addEventListener("input", function() {
         clearTimeout(searchDebounceTimer);
 
@@ -315,6 +347,7 @@
         }, SEARCH_DEBOUNCE_DELAY);
     });
 
+    // menangani submit form search tanpa reload halaman
     searchForm.addEventListener("submit", function(event) {
         event.preventDefault();
         clearTimeout(searchDebounceTimer);
@@ -322,7 +355,9 @@
     });
 
 
+    // tentuin endpoint add experience
     const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
+    // ambil elemen form experience dari halaman
     const experienceForm = document.getElementById('experience-form');
 
     // Membaca nilai cookie, digunakan untuk mengambil token CSRF
@@ -351,13 +386,16 @@
     async function addExperience(event) {
         event.preventDefault();
 
+        //  ambil tombol submit dari form
         const submitButton = experienceForm.querySelector(
             'button[type="submit"]'
         );
 
+        // nonaktifin tombol selama proses pengiriman untuk mencegah fprm dikirim berkali-kali
         submitButton.disabled = true;
 
         try {
+            // kirim data form dengan fecth API dengan method POST
             const response = await fetch(CREATE_EXPERIENCE_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -366,21 +404,29 @@
                 body: new FormData(experienceForm),
             });
 
+            // ubah response server jadi JSON
             const result = await response.json().catch(() => ({}));
 
+            // jika request berhasil, jalankan proses setelah data ditambah
             if (response.ok) {
+
+                // mengosongkan form setelah data berhasil ditambahin
                 experienceForm.reset();
+                // tutup modal tambah experience
                 closeExperienceModal();
 
+                // tampilin notif keberhasilan
                 showToast(
                     'Success',
                     'New experience has been added!',
                     'success'
                 );
 
+                // muat ulang data experience tanpa reload halaman
                 fetchExperiences(searchInput.value.trim());
 
             } else {
+                // mengambil pesan error dari response server dan menggabungkan seluruh error jadi satu pesan
                 const errorMessages = result.errors
                     ? Object.values(result.errors)
                         .flat()
@@ -390,6 +436,7 @@
                         `An error occurred (status ${response.status}).`
                     ];
 
+                // tampilin notif error
                 showToast(
                     'Failed to add experience',
                     errorMessages.join(' '),
@@ -398,8 +445,10 @@
             }
 
         } catch (error) {
+            // tangani error kalau request tidak dapat diproses
             console.error('Error adding experience:', error);
 
+            // tampilin notif gagal
             showToast(
                 'Failed to add experience',
                 'Unable to connect to the server. Please try again..',
@@ -407,15 +456,18 @@
             );
 
         } finally {
+            // mengaktifin kembali tombol submit setelah proses  selesai
             submitButton.disabled = false;
         }
     }
 
+    // jalanin addExperience ketika form disubmit
     if (experienceForm) {
         experienceForm.addEventListener('submit', addExperience);
     }
 
     // Start application
+    // muat data experience ketika halaman pertama kali dibuka
     fetchExperiences(
         searchInput.value.trim()
     );

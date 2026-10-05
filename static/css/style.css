@@ -870,28 +870,32 @@ nav a:hover{
     color: inherit;
 }
 
+/* tampilin toast pas popover terbuka */
 .toast-component:popover-open {
     display: flex;
 }
 
+/* kondisi awal toast */
 .toast-hidden {
     opacity: 0;
     transform: translateY(150%);
     pointer-events: none;
 }
 
+/* kondisi toast pas ditampil */
 .toast-show {
     opacity: 1;
     transform: translateY(0);
 }
 
+/* atur tampilan judul pada toast */
 .toast-title {
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 0.15rem;
     font-family: "Space Grotesk", -apple-system, sans-serif;
 }
-
+/* atur tampilan pesan/detail pada toast */
 .toast-message {
     font-size: 0.85rem;
     color: var(--text-muted);
@@ -902,6 +906,8 @@ nav a:hover{
 .toast-error { border-left: 4px solid #b42318; }
 .toast-normal { border-left: 4px solid var(--accent); }
 
+/* MODAL FORM */
+/* atur modal agar memenuhi layar dan awalnya tidak ditampilkan */
 .section-form-modal {
     display: none;
     position: fixed;
@@ -919,10 +925,12 @@ nav a:hover{
     justify-content: center;
 }
 
+/* tampilin modal pas popover terbuka */
 .section-form-modal:popover-open {
     display: flex;
 }
 
+/* backdrop di belakang modal */
 .section-form-modal__backdrop {
     position: absolute;
     inset: 0;
@@ -934,6 +942,7 @@ nav a:hover{
     cursor: default;
 }
 
+/* kotak utama yang berisi form modal */
 .section-form-modal__content {
     position: relative;
     z-index: 1;
@@ -947,12 +956,14 @@ nav a:hover{
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
 }
 
+/* atur judul dalam modal */
 .section-form-modal__content h2 {
     margin: 0 2.5rem 1.25rem 0;
     font-family: "Space Grotesk", -apple-system, sans-serif;
     font-size: 1.5rem;
 }
 
+/* tombol X buat nutup modal */
 .section-form-modal__close {
     position: absolute;
     top: 1rem;
@@ -966,6 +977,7 @@ nav a:hover{
     cursor: pointer;
 }
 
+/* atur posisi tombol cancel dan submit di bagian bawah modal */
 .section-form-modal__actions {
     display: flex;
     justify-content: flex-end;
@@ -973,16 +985,20 @@ nav a:hover{
     margin-top: 1.5rem;
 }
 
+/* hide elemen */
 .hide {
     display: none !important;
 }
 
+/* responsive modal */
 @media (max-width: 600px) {
+    /* modal ditempatin mulai dari bagian bawah */
     .section-form-modal {
         align-items: flex-end;
         padding: 0;
     }
 
+    /* buat isi modal penuhin lebar layar */
     .section-form-modal__content {
         width: 100%;
         max-height: 90vh;
@@ -990,10 +1006,12 @@ nav a:hover{
         border-radius: var(--radius) var(--radius) 0 0;
     }
 
+    /* tombol pada modal dibuat vertikal */
     .section-form-modal__actions {
         flex-direction: column-reverse;
     }
 
+    /* buat tombol menuhin lebar modal */
     .section-form-modal__actions .button {
         width: 100%;
         text-align: center;

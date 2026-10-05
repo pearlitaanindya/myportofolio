@@ -291,38 +291,51 @@ def toggle_star_education(request, education_id):
 
     return redirect("main:show_education")
 
-@require_POST
+# fungsi buat tambah data experience lewat AJAX
+@require_POST # pastiin request yang masuk dengan method POST
 def create_experience_ajax(request):
+    # pastiin hanya superuser yang boleh nambah data experience
     if not request.user.is_superuser:
         return JsonResponse(
             {"message": "Only the portfolio owner can add an experience."},
             status=403,
         )
 
+# ambil data dari request POST dan masukin ke dalam EducationForm untuk divalidasi
     form = ExperienceForm(request.POST)
+    # kalo semua data form valid
     if form.is_valid():
+        # simpan data yang sudah tervalidasi ke database
         experience = form.save()
+        # kembalikan response JSON dengan status 201 yang menandakan data berhasil dibuat
         return JsonResponse(
             {"message": "New experience has been added succesfully.", "pk": str(experience.id)},
             status=201,
         )
 
+# kalo validasi gagal, kembaliin detail error dalam bentuk JSON dengan status 400
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
-@require_POST
+# fungsi buat nambah  data education lewat AJAX
+@require_POST # pastiin request yang masuk menggunakan method POST
 def create_education_ajax(request):
+    # pastiin hanya superuser yang boleh menambah data education
     if not request.user.is_superuser:
         return JsonResponse(
             {"message": "Only the portfolio owner can add an education."},
             status=403,
         )
 
+# ambil data dari request POST dan masukin ke EducationForm untuk divalidasi
     form = EducationForm(request.POST)
+    # kalau semua data valid:
     if form.is_valid():
+        # simpan data education yang sudah tervalidasi ke database
         education = form.save()
+        # kembalikan response JSON dengan status 201 yang menandakan data berhasil dibuat
         return JsonResponse(
             {"message": "New education has been added succesfully.", "pk": str(education.id)},
             status=201,
         )
-
+    # kalo gagal, kembaliin detail error dalam bentuk JSON dengan status 400
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

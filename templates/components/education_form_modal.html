@@ -1,9 +1,12 @@
+<!-- modal add education -->
 <div id="add-education-modal"
      class="section-form-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
      aria-labelledby="add-education-modal-title">
+
+     <!-- backdrop yang digunain untuk nutup modal -->
     <button type="button"
             class="section-form-modal__backdrop"
             popovertarget="add-education-modal"
@@ -11,21 +14,28 @@
             aria-label="Close add education form"></button>
 
     <div class="section-form-modal__content">
+        <!-- tombol X untuk nutup modal -->
         <button type="button"
                 class="section-form-modal__close"
                 popovertarget="add-education-modal"
                 popovertargetaction="hide"
                 aria-label="Close add education form">×</button>
 
+        <!-- judul modal  -->
         <h2 id="add-education-modal-title">Add new education</h2>
+
+        <!-- form untuk nambahin data education -->
         <form id="education-form"
               method="post"
               action="{% url 'main:create_education' %}"
               class="section-form">
             {% csrf_token %}
+            <!-- tampilin field dari EducationForm -->
             {% for field in form %}
                 <div class="form-group">
+                    <!-- label tiap field -->
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <!-- input field dari EducationForm -->
                     {{ field }}
                     {% for error in field.errors %}
                         <p class="form-error">{{ error }}</p>
@@ -33,10 +43,12 @@
                 </div>
             {% endfor %}
             <div class="section-form-modal__actions">
+                <!-- tombol batalin dan nutup modal -->
                 <button type="button"
                         class="button button-secondary"
                         popovertarget="add-education-modal"
                         popovertargetaction="hide">Cancel</button>
+                <!-- tombol untuk kirim form -->
                 <button type="submit" class="button">Add Education</button>
             </div>
         </form>

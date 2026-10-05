@@ -107,6 +107,7 @@
         const articleElement = document.createElement('article');
         articleElement.className = 'card';
 
+        // tampilkan gambar jika education punya thumbnail
         const imageHtml = education.thumbnail
             ? `<img src="${escapeHtml(education.thumbnail)}"
                 alt="${escapeHtml(education.degree)}"
@@ -153,18 +154,22 @@
                </form>`
             : '';
 
+        // menentukan apakah tombol star memiliki class is-starred
         const isStarredClass = education.is_starred
             ? " is-starred"
             : "";
 
+        // menentukan teks tombol berdasarkan status star
         const starText = education.is_starred
             ? "Unstar"
             : "Star";
 
+        // menentukan tooltip tombol star berdasarkan jumlah dan nama pengguna yang memberi star
         const starTitle = education.star_count > 0
             ? `Dibintangi oleh ${escapeHtml(education.starred_by_names)}`
             : "Jadilah yang pertama memberi star";
 
+        // membuat struktur HTML lengkap untuk card education
         const completeCardHtml = `
             ${imageHtml}
 
@@ -217,8 +222,10 @@
             </div>
         `;
 
+        // memasukkan HTML card ke dalam elemen article
         articleElement.innerHTML = completeCardHtml;
 
+        // return elemen card yang sudah dibuat
         return articleElement;
     }
 
@@ -234,25 +241,33 @@
         });
     }
 
+
+    // menutup modal tambah education dengan popover API
     function closeEducationModal() {
         document.getElementById("add-education-modal").hidePopover();
     }
 
     // Fetch data education
     async function fetchEducation(searchQuery = "") {
+
+        // batalin request sebelumnya kalau masih berjalan supaya request search yang lebih lama ga nimpa hasil terbaru
         if (educationAbortController) {
             educationAbortController.abort();
         }
 
+        // buat controller baru untuk request saat ini
         educationAbortController = new AbortController();
 
         try {
+            // tampilin loading state selama data sedang diambil
             displayPageSection({ showLoading: true });
 
+            // buat endpoint URL berdasarkan keyword pencarian 
             const url = searchQuery
                 ? `${BASE_EDUCATION_ENDPOINT}?degree=${encodeURIComponent(searchQuery)}`
                 : BASE_EDUCATION_ENDPOINT;
 
+            // kirim request GET ke endpoint education dan minta response dalam format JSON
             const response = await fetch(url, {
                 headers: {
                     'Accept': 'application/json'
@@ -260,37 +275,47 @@
                 signal: educationAbortController.signal,
             });
 
+            // kalo response dari server ga berhasil, tampilin error
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
 
+            // ubah response JSON jadi JavaScript
             const educationData = await response.json();
 
+            // jika tidak ada data education yang ditemukan, tampilin empty state
             if (educationData.length === 0) {
                 displayPageSection({ showEmpty: true });
             } else {
+                // kosongin card yang sebelumnya ditampilkan
                 gridContainer.innerHTML = '';
 
+                // buat card untuk tiap data education lalu masukin ke dalam grid
                 educationData.forEach(item => {
                     gridContainer.appendChild(
                         buildEducationCardElement(item)
                     );
                 });
-
+                // tampilin grid setelah seluruh data berhasil dimuat
                 displayPageSection({ showGrid: true });
             }
 
         } catch (error) {
+            // kalau request dibatalin karena new search, ga perlu nampilin error
             if (error.name === 'AbortError') {
                 return;
             }
 
+            // tampilin error di console untuk debug
             console.error('Error loading education:', error);
+            // tampilin error state ke user
             displayPageSection({ showError: true });
         }
     }
 
+    // tampilin endpoint untuk add education lewat AJAX
     const CREATE_EDUCATION_ENDPOINT = "{% url 'main:create_education_ajax' %}";
+    // ambil elemen form education dari halaman
     const educationForm = document.getElementById('education-form');
 
     // Membaca nilai cookie, digunakan untuk mengambil token CSRF
@@ -313,6 +338,7 @@
     async function addEducation(event) {
         event.preventDefault();
 
+        // nonaktifkan tombol submit selama proses pengiriman untuk mencegah form dikirim berkali-kali
         const submitButton = educationForm.querySelector(
             'button[type="submit"]'
         );
@@ -320,6 +346,8 @@
         submitButton.disabled = true;
 
         try {
+
+            // kirim data form ke endpoiint dengan method POST dan sertain CSRF token
             const response = await fetch(CREATE_EDUCATION_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -328,23 +356,31 @@
                 body: new FormData(educationForm),
             });
 
+            // ubah response dari server menjadi JSON, kalau bukan JSON, gunakan object kosong
             const result = await response.json().catch(() => ({}));
 
+            // jika request berhasil, jalankan proses setelah education berhasil ditambah
             if (response.ok) {
+                // mengosongkan kembali input form
                 educationForm.reset();
 
+                // tutup modal setelah data berhasil ditambah
                 document
                     .getElementById('add-education-modal')
                     .hidePopover();
 
+                // tampilkan notif berhasil
                 showToast(
                     'Success',
                     'New education has been added!',
                     'success'
                 );
 
+                // muat ulang data education tanpa page reload
                 fetchEducation(searchInput.value.trim());
             } else {
+
+                // ambil pesan error dari response server dan gabungkan seluruh error jadi 1 pesan
                 const errorMessages = result.errors
                     ? Object.values(result.errors)
                         .flat()
@@ -354,6 +390,7 @@
                         `An error occurred (status ${response.status}).`
                     ];
 
+                // menampilkan notif error
                 showToast(
                     'Failed to add education',
                     errorMessages.join(' '),
@@ -361,27 +398,33 @@
                 );
             }
         } catch (error) {
+            // menangani error ketika request tidak dapat diproses, misal ketika terjadi masalah koneksi
             console.error('Error adding education:', error);
 
+            // tampilkan notifikasi bahwa request gagal terhubung ke server
             showToast(
                 'Failed to add education',
                 'Unable to connect to the server. Please try again.',
                 'error'
             );
+            // aktifkan kembali tombol submit setelah proses selesai
         } finally {
             submitButton.disabled = false;
         }
     }
 
+    // jalanin addEducation kalau form eductaion disubmit
     if (educationForm) {
         educationForm.addEventListener('submit', addEducation);
     }
 
     // Event Handler untuk Form Search
+    // ambil data education berdasarkan keyword search
     function searchEducation() {
         fetchEducation(searchInput.value.trim());
     }
 
+    // jalanin search setelah user berhenti ngetik selama beberapa saat sehingga request AJAX tidak dikiirm pada tiap ketikan
     searchInput.addEventListener("input", function() {
         clearTimeout(searchDebounceTimer);
 
@@ -390,6 +433,7 @@
         }, SEARCH_DEBOUNCE_DELAY);
     });
 
+    // handle submit form search tanpa melakukan reload halaman
     searchForm.addEventListener("submit", function(event) {
         event.preventDefault();
         clearTimeout(searchDebounceTimer);
@@ -397,6 +441,7 @@
     });
 
     // Start application
+    // muat data education ketika halaman pertama kali dibuka
     fetchEducation(searchInput.value.trim());
 </script>
 {% endblock content %}
