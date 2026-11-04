@@ -58,8 +58,6 @@
                 <!-- Experience Grid -->
                 <div id="grid" class="card-grid hide"></div>
             </div>
-
-            </di>
         </div>
     </section>
     </main>
@@ -70,7 +68,11 @@
 
     <script>
     // Konfigurasi
-    const BASE_EXPERIENCES_ENDPOINT = "{% url 'main:get_experience_json' %}";
+    const BASE_EXPERIENCES_ENDPOINT = "{% url 'api:experience-list' %}";
+    const DETAIL_EXPERIENCE_ENDPOINT = "{% url 'api:experience-detail' '00000000-0000-0000-0000-000000000000' %}";
+    const STAR_EXPERIENCE_ENDPOINT = "{% url 'api:experience-star' '00000000-0000-0000-0000-000000000000' %}";
+
+    const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
     let experiencesAbortController;
@@ -103,8 +105,8 @@
     // Membuat elemen card experience
     function buildExperienceCardElement(item) {
         // ambil data field dan ID dari data JSON
-        const experience = item.fields;
-        const experienceId = item.pk;
+        const experience = item;
+        const experienceId = item.id;
 
         // buat elemen article sebagai container card
         const articleElement = document.createElement('article');
@@ -118,18 +120,16 @@
             : '';
 
         // buat url untuk hapus experience
-        const deleteUrl = "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}"
-            .replace(
-                '00000000-0000-0000-0000-000000000000',
-                experienceId
-            );
+        const deleteUrl = DETAIL_EXPERIENCE_ENDPOINT.replace(
+            '00000000-0000-0000-0000-000000000000',
+            experienceId
+        );
 
         // buat url untuk toggle star experience
-        const starUrl = "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}"
-            .replace(
-                '00000000-0000-0000-0000-000000000000',
-                experienceId
-            );
+        const starUrl = STAR_EXPERIENCE_ENDPOINT.replace(
+            '00000000-0000-0000-0000-000000000000',
+            experienceId
+        );
 
         // buat url untuk edit experience
         const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
@@ -147,16 +147,11 @@
 
         // delete hanya untuk superuser
         const deleteHtml = IS_SUPERUSER
-            ? `<form method="post"
-                    action="${deleteUrl}"
-                    style="display:inline;">
-                {% csrf_token %}
-                <button type="submit"
-                        class="button button-danger"
-                        onclick="return confirm('Yakin ingin menghapus experience ini?');">
-                    Delete Experience
-                </button>
-            </form>`
+            ? `<button type="button"
+                    class="button button-danger delete-experience-button"
+                    data-url="${deleteUrl}">
+                Delete Experience
+            </button>`
             : '';
 
         // tentuin teks tombol berdasarkan status star
@@ -222,20 +217,16 @@
 
                         ${editHtml}
 
-                        <form method="post"
-                              action="${starUrl}"
-                              class="star-form">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="button button-star${isStarredClass}"
-                                    title="${starTitle}">
-                                <span aria-hidden="true">★</span>
-                                ${starText}
-                                <span class="star-count">
-                                    ${experience.star_count}
-                                </span>
-                            </button>
-                        </form>
+                        <button type="button"
+                                class="button button-star${isStarredClass} star-experience-button"
+                                data-url="${starUrl}"
+                                title="${starTitle}">
+                            <span aria-hidden="true">★</span>
+                            ${starText}
+                            <span class="star-count">
+                                ${experience.star_count}
+                            </span>
+                        </button>
 
                         ${deleteHtml}
 
@@ -356,7 +347,7 @@
 
 
     // tentuin endpoint add experience
-    const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
+    const CREATE_EXPERIENCE_ENDPOINT = BASE_EXPERIENCES_ENDPOINT;
     // ambil elemen form experience dari halaman
     const experienceForm = document.getElementById('experience-form');
 
@@ -395,13 +386,28 @@
         submitButton.disabled = true;
 
         try {
-            // kirim data form dengan fecth API dengan method POST
+            // ambil data dari form
+            const formData = new FormData(experienceForm);
+            const payload = Object.fromEntries(formData.entries());
+
+            // sesuaikan field opsional dengan format DRF
+            if (!payload.ended_at) {
+                payload.ended_at = null;
+            }
+
+            if (!payload.thumbnail) {
+                payload.thumbnail = null;
+            }
+
+            // kirim data dalam format JSON ke API DRF
             const response = await fetch(CREATE_EXPERIENCE_ENDPOINT, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
                 },
-                body: new FormData(experienceForm),
+                body: JSON.stringify(payload),
             });
 
             // ubah response server jadi JSON
@@ -427,14 +433,13 @@
 
             } else {
                 // mengambil pesan error dari response server dan menggabungkan seluruh error jadi satu pesan
-                const errorMessages = result.errors
-                    ? Object.values(result.errors)
-                        .flat()
-                        .map(error => error.message)
-                    : [
-                        result.message ||
-                        `An error occurred (status ${response.status}).`
-                    ];
+                const errorMessages = Object.values(result)
+                    .flat()
+                    .filter(message => typeof message === 'string');
+
+                if (errorMessages.length === 0) {
+                    errorMessages.push(`An error occurred (status ${response.status}).`);
+                }
 
                 // tampilin notif error
                 showToast(
@@ -465,6 +470,114 @@
     if (experienceForm) {
         experienceForm.addEventListener('submit', addExperience);
     }
+
+    // tanganin tombol Star dan Delete pada card Experience
+    gridContainer.addEventListener('click', async function(event) {
+        const starButton = event.target.closest('.star-experience-button');
+        const deleteButton = event.target.closest('.delete-experience-button');
+
+        if (!starButton && !deleteButton) {
+            return;
+        }
+
+        // star hanya untuk user yang sudah login
+        if (starButton && !IS_AUTHENTICATED) {
+            showToast(
+                'Login required',
+                'Please log in to star this experience.',
+                'error'
+            );
+            return;
+        }
+
+        // konfirmasi sebelum menghapus
+        if (deleteButton) {
+            const confirmed = confirm(
+                'Yakin ingin menghapus experience ini?'
+            );
+
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        const button = starButton || deleteButton;
+        const method = starButton ? 'POST' : 'DELETE';
+
+        button.disabled = true;
+
+        try {
+            const response = await fetch(button.dataset.url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            if (starButton) {
+                // ambil data Experience terbaru dari response API
+                const updatedExperience = await response.json();
+
+                // update tampilan tombol Star saja
+                starButton.classList.toggle(
+                    'is-starred',
+                    updatedExperience.is_starred
+                );
+
+                starButton.querySelector('.star-count').textContent =
+                    updatedExperience.star_count;
+
+                // update tulisan Star/Unstar tanpa mengubah seluruh card
+                starButton.innerHTML = `
+                    <span aria-hidden="true">★</span>
+                    ${updatedExperience.is_starred ? 'Unstar' : 'Star'}
+                    <span class="star-count">${updatedExperience.star_count}</span>
+                `;
+
+                starButton.title = updatedExperience.star_count > 0
+                    ? `Starred by ${updatedExperience.starred_by_names}`
+                    : 'Be the first to star this experience';
+
+                showToast(
+                    'Success',
+                    'Experience star updated!',
+                    'success'
+                );
+
+            } else {
+                // hapus card dari tampilan setelah API DELETE berhasil
+                button.closest('.card').remove();
+
+                // jika tidak ada card tersisa, tampilkan empty state
+                if (gridContainer.children.length === 0) {
+                    displayPageSection({ showEmpty: true });
+                }
+
+                showToast(
+                    'Success',
+                    'Experience deleted successfully!',
+                    'success'
+                );
+            }
+
+        } catch (error) {
+            console.error('Experience action failed:', error);
+
+            showToast(
+                'Error',
+                'Unable to process your request. Please try again.',
+                'error'
+            );
+
+        } finally {
+            button.disabled = false;
+        }
+    });
 
     // Start application
     // muat data experience ketika halaman pertama kali dibuka

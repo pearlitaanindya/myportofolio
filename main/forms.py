@@ -79,9 +79,14 @@ class ExperienceForm(ModelForm):
                 ).strip()        
     
     def clean_description(self):
-        return strip_tags(
-            self.cleaned_data["description"]        
-            ).strip()                
+        description = strip_tags(
+        self.cleaned_data["description"]
+        ).strip()
+        if not description:
+            raise ValidationError(
+                "Description cannot be empty."
+            )
+        return description              
        
 # form education
 class EducationForm(ModelForm):
