@@ -66,6 +66,7 @@ def update_experience(request, experience_id):
         "name": "Pearlita Anindya Prameswari",
         "form": form,
         "update" : True,
+        "experience" : experience
     }
     return render(request, "experience_form.html", context)
 

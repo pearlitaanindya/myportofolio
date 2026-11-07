@@ -19,7 +19,7 @@
                         Add New Experience
                     {% endif %}
                 </h1>
-                <form method="post" class="section-form">
+                <form method="post" id="edit-experience-form" class="section-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
@@ -42,4 +42,66 @@
             </div>
         </section>
     </main>
+
+    {% if update %}
+    <script>
+        const editForm = document.getElementById('edit-experience-form');
+        const EDIT_API_URL = "{% url 'api:experience-detail' experience.id %}";
+
+        editForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const button = editForm.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                const formData = new FormData(editForm);
+                const payload = Object.fromEntries(formData.entries());
+
+                if (!payload.thumbnail) payload.thumbnail = null;
+                if (!payload.ended_at) payload.ended_at = null;
+
+                const response = await fetch(EDIT_API_URL, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    const errorMessages = Object.entries(result)
+                        .flatMap(([field, messages]) =>
+                            (Array.isArray(messages) ? messages : [messages])
+                                .map(message => `${field}: ${String(message)}`)
+                        );
+
+                    showToast(
+                        'Failed to update experience',
+                        errorMessages.join(' ') || `HTTP ${response.status}`,
+                        'error'
+                    );
+                    return;
+                }
+
+                window.location.href = "{% url 'main:show_experience' %}";
+
+            } catch (error) {
+                console.error('Error updating experience:', error);
+                showToast(
+                    'Error',
+                    'Unable to update experience. Please try again.',
+                    'error'
+                );
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+    {% endif %}
+
 {% endblock content %}
