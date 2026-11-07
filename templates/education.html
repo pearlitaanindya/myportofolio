@@ -60,7 +60,7 @@
 
     <script>
     // Konfigurasi
-    const BASE_EDUCATION_ENDPOINT = "{% url 'main:get_education_json' %}";
+    const BASE_EDUCATION_ENDPOINT = "{% url 'api:education-list' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
     let educationAbortController;
@@ -101,8 +101,8 @@
 
     // Membuat elemen card education
     function buildEducationCardElement(item) {
-        const education = item.fields;
-        const educationId = item.pk;
+        const education = item;
+        const educationId = item.id;
 
         const articleElement = document.createElement('article');
         articleElement.className = 'card';
@@ -314,7 +314,7 @@
     }
 
     // tampilin endpoint untuk add education lewat AJAX
-    const CREATE_EDUCATION_ENDPOINT = "{% url 'main:create_education_ajax' %}";
+    const CREATE_EDUCATION_ENDPOINT = "{% url 'api:education-list' %}";
     // ambil elemen form education dari halaman
     const educationForm = document.getElementById('education-form');
 
@@ -381,14 +381,18 @@
             } else {
 
                 // ambil pesan error dari response server dan gabungkan seluruh error jadi 1 pesan
-                const errorMessages = result.errors
-                    ? Object.values(result.errors)
-                        .flat()
-                        .map(error => error.message)
-                    : [
-                        result.message ||
-                        `An error occurred (status ${response.status}).`
-                    ];
+                const errorMessages = Object.entries(result)
+                    .flatMap(([field, messages]) => {
+                        const values = Array.isArray(messages) ? messages : [messages];
+
+                        return values.map(message =>
+                            `${field}: ${String(message)}`
+                        );
+                    });
+
+                if (errorMessages.length === 0) {
+                    errorMessages.push(`Request failed (${response.status}).`);
+                }
 
                 // menampilkan notif error
                 showToast(

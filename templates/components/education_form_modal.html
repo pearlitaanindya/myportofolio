@@ -27,7 +27,7 @@
         <!-- form untuk nambahin data education -->
         <form id="education-form"
               method="post"
-              action="{% url 'main:create_education' %}"
+              action="{% url 'api:education-list' %}"
               class="section-form">
             {% csrf_token %}
             <!-- tampilin field dari EducationForm -->
