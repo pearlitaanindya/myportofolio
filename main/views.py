@@ -223,6 +223,7 @@ def update_education(request, education_id):
         "name": "Pearlita Anindya Prameswari",
         "form": form,
         "update" : True,
+        "education" : education,
     }
     return render(request, "education_form.html", context)
 

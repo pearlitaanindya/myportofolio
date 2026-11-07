@@ -2,7 +2,7 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
-    message = "You do not have permission to modify this experience."
+    message = "You do not have permission to perform this action."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:

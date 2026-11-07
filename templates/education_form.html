@@ -19,7 +19,7 @@
                         Add New Education
                     {% endif %}
                 </h1>
-                <form method="post" class="section-form">
+                <form method="post" id="edit-education-form" class="section-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
@@ -42,4 +42,64 @@
             </div>
         </section>
     </main>
+
+    {% if update %}
+    <script>
+        const editForm = document.getElementById('edit-education-form');
+        const EDIT_API_URL = "{% url 'api:education-detail' education.id %}";
+
+        editForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const button = editForm.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                const formData = new FormData(editForm);
+                const payload = Object.fromEntries(formData.entries());
+
+                if (!payload.gpa) payload.gpa = null;
+                if (!payload.thumbnail) payload.thumbnail = null;
+                if (!payload.ended_at) payload.ended_at = null;
+
+                const response = await fetch(EDIT_API_URL, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    const messages = Object.values(result)
+                        .flat()
+                        .filter(message => typeof message === 'string');
+
+                    showToast(
+                        'Failed to update education',
+                        messages.join(' ') || `HTTP ${response.status}`,
+                        'error'
+                    );
+                    return;
+                }
+
+                window.location.href = "{% url 'main:show_education' %}";
+
+            } catch (error) {
+                showToast(
+                    'Error',
+                    'Unable to update education. Please try again.',
+                    'error'
+                );
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+    {% endif %}
+
 {% endblock content %}

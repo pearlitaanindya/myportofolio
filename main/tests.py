@@ -49,8 +49,7 @@ class MainTest(TestCase):
 
         self.assertContains(response, 'id="experience-search-form"')
         self.assertContains(response, 'id="grid"')
-        self.assertContains(response, "/api/v1/experiences/")
-
+        self.assertContains(response, reverse("api:experience-list"))
         self.assertContains(
             response,
             f'href="{reverse("main:show_main")}"'
@@ -147,7 +146,7 @@ class MainTest(TestCase):
 
         self.assertContains(response, 'id="education-search-form"')
         self.assertContains(response, 'id="grid"')
-        self.assertContains(response, "/api/education/")
+        self.assertContains(response, reverse("api:education-list"))
 
         self.assertContains(
             response,

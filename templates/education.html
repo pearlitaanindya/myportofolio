@@ -58,11 +58,15 @@
         {% include "components/education_form_modal.html" %}
     {% endif %}
 
+    {% csrf_token %}
     <script>
     // Konfigurasi
-    const BASE_EDUCATION_ENDPOINT = "{% url 'main:get_education_json' %}";
+    const BASE_EDUCATION_ENDPOINT = "{% url 'api:education-list' %}";
+    const DETAIL_EDUCATION_ENDPOINT = "{% url 'api:education-detail' '00000000-0000-0000-0000-000000000000' %}";
+    const STAR_EDUCATION_ENDPOINT = "{% url 'api:education-star' '00000000-0000-0000-0000-000000000000' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
+    const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
     let educationAbortController;
 
     // Elemen DOM
@@ -101,8 +105,8 @@
 
     // Membuat elemen card education
     function buildEducationCardElement(item) {
-        const education = item.fields;
-        const educationId = item.pk;
+        const education = item;
+        const educationId = item.id;
 
         const articleElement = document.createElement('article');
         articleElement.className = 'card';
@@ -115,17 +119,15 @@
             : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli
-        const starUrl = "{% url 'main:toggle_star_education' '00000000-0000-0000-0000-000000000000' %}"
-            .replace(
-                '00000000-0000-0000-0000-000000000000',
-                educationId
-            );
+        const starUrl = STAR_EDUCATION_ENDPOINT.replace(
+            '00000000-0000-0000-0000-000000000000',
+            educationId
+        );
 
-        const deleteUrl = "{% url 'main:delete_education' '00000000-0000-0000-0000-000000000000' %}"
-            .replace(
-                '00000000-0000-0000-0000-000000000000',
-                educationId
-            );
+        const deleteUrl = DETAIL_EDUCATION_ENDPOINT.replace(
+            '00000000-0000-0000-0000-000000000000',
+            educationId
+        );
 
         const updateUrl = "{% url 'main:update_education' '00000000-0000-0000-0000-000000000000' %}"
             .replace(
@@ -142,16 +144,11 @@
 
         // Delete tetapi hanya untuk superuser
         const deleteHtml = IS_SUPERUSER
-            ? `<form method="post"
-                    action="${deleteUrl}"
-                    style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="button button-danger"
-                            onclick="return confirm('Yakin ingin menghapus education ini?');">
-                        Delete Education
-                    </button>
-               </form>`
+            ? `<button type="button"
+                    class="button button-danger delete-education-button"
+                    data-url="${deleteUrl}">
+                    Delete Education
+            </button>`
             : '';
 
         // menentukan apakah tombol star memiliki class is-starred
@@ -182,7 +179,7 @@
                 </p>
 
                 <p class="card-text">
-                    GPA/Grade: ${escapeHtml(education.gpa) ?? "-"}
+                    GPA/Grade: ${escapeHtml(education.gpa ?? "-")}
                 </p>
 
                 <p class="card-footer">
@@ -200,20 +197,16 @@
 
                         ${editHtml}
 
-                        <form method="post"
-                              action="${starUrl}"
-                              class="star-form">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="button button-star${isStarredClass}"
-                                    title="${starTitle}">
-                                <span aria-hidden="true">★</span>
-                                ${starText}
-                                <span class="star-count">
-                                    ${education.star_count}
-                                </span>
-                            </button>
-                        </form>
+                        <button type="button"
+                                class="button button-star${isStarredClass} star-education-button"
+                                data-url="${starUrl}"
+                                title="${starTitle}">
+                            <span aria-hidden="true">★</span>
+                            ${starText}
+                            <span class="star-count">
+                                ${education.star_count}
+                            </span>
+                        </button>
 
                         ${deleteHtml}
 
@@ -314,7 +307,7 @@
     }
 
     // tampilin endpoint untuk add education lewat AJAX
-    const CREATE_EDUCATION_ENDPOINT = "{% url 'main:create_education_ajax' %}";
+    const CREATE_EDUCATION_ENDPOINT = "{% url 'api:education-list' %}";
     // ambil elemen form education dari halaman
     const educationForm = document.getElementById('education-form');
 
@@ -346,14 +339,32 @@
         submitButton.disabled = true;
 
         try {
+            // ambil data dari form Education
+            const formData = new FormData(educationForm);
+            const payload = Object.fromEntries(formData.entries());
 
-            // kirim data form ke endpoiint dengan method POST dan sertain CSRF token
+            // sesuaikan field opsional dengan format DRF
+            if (!payload.gpa) {
+                payload.gpa = null;
+            }
+
+            if (!payload.thumbnail) {
+                payload.thumbnail = null;
+            }
+
+            if (!payload.ended_at) {
+                payload.ended_at = null;
+            }
+
+            // kirim data dalam format JSON ke API DRF
             const response = await fetch(CREATE_EDUCATION_ENDPOINT, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
                 },
-                body: new FormData(educationForm),
+                body: JSON.stringify(payload),
             });
 
             // ubah response dari server menjadi JSON, kalau bukan JSON, gunakan object kosong
@@ -381,14 +392,18 @@
             } else {
 
                 // ambil pesan error dari response server dan gabungkan seluruh error jadi 1 pesan
-                const errorMessages = result.errors
-                    ? Object.values(result.errors)
-                        .flat()
-                        .map(error => error.message)
-                    : [
-                        result.message ||
-                        `An error occurred (status ${response.status}).`
-                    ];
+                const errorMessages = Object.entries(result)
+                    .flatMap(([field, messages]) => {
+                        const values = Array.isArray(messages) ? messages : [messages];
+
+                        return values.map(message =>
+                            `${field}: ${String(message)}`
+                        );
+                    });
+
+                if (errorMessages.length === 0) {
+                    errorMessages.push(`Request failed (${response.status}).`);
+                }
 
                 // menampilkan notif error
                 showToast(
@@ -417,6 +432,117 @@
     if (educationForm) {
         educationForm.addEventListener('submit', addEducation);
     }
+        // handle tombol Star dan Delete pada card Education
+        gridContainer.addEventListener('click', async function(event) {
+            const starButton = event.target.closest('.star-education-button');
+            const deleteButton = event.target.closest('.delete-education-button');
+
+            if (!starButton && !deleteButton) {
+                return;
+            }
+
+            // star hanya boleh dilakukan oleh user yang sudah login
+            if (starButton && !IS_AUTHENTICATED) {
+                showToast(
+                    'Login required',
+                    'Please log in to star this education.',
+                    'error'
+                );
+                return;
+            }
+
+            // konfirmasi sebelum menghapus Education
+            if (deleteButton) {
+                const confirmed = confirm(
+                    'Yakin ingin menghapus education ini?'
+                );
+
+                if (!confirmed) {
+                    return;
+                }
+            }
+
+            const button = starButton || deleteButton;
+            const method = starButton ? 'POST' : 'DELETE';
+
+            // cegah request ganda selama proses berlangsung
+            if (button.disabled) return;
+            button.disabled = true;
+
+            try {
+                const response = await fetch(button.dataset.url, {
+                    method: method,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+
+                if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    const errorMessages = Object.values(data)
+                        .flat()
+                        .filter(message => typeof message === 'string');
+
+                    throw new Error(
+                        errorMessages.join(' ') ||
+                        `Request failed (HTTP ${response.status}).`
+                    );
+                }
+
+                if (starButton) {
+                    // api mengembalikan status dan jumlah star terbaru
+                    const updatedEducation = await response.json();
+
+                    starButton.classList.toggle(
+                        'is-starred',
+                        updatedEducation.is_starred
+                    );
+
+                    starButton.innerHTML = `
+                        <span aria-hidden="true">★</span>
+                        ${updatedEducation.is_starred ? 'Unstar' : 'Star'}
+                        <span class="star-count">${updatedEducation.star_count}</span>
+                    `;
+
+                    starButton.title = updatedEducation.star_count > 0
+                        ? `Dibintangi oleh ${escapeHtml(updatedEducation.starred_by_names)}`
+                        : 'Jadilah yang pertama memberi star';
+
+                    showToast(
+                        'Success',
+                        'Education star updated!',
+                        'success'
+                    );
+
+                } else {
+                    // delete mengembalikan 204 tanpa body JSON
+                    button.closest('.card').remove();
+
+                    if (gridContainer.children.length === 0) {
+                        displayPageSection({ showEmpty: true });
+                    }
+
+                    showToast(
+                        'Success',
+                        'Education deleted successfully!',
+                        'success'
+                    );
+                }
+
+            } catch (error) {
+                console.error('Education action failed:', error);
+
+                showToast(
+                    'Error',
+                    error.message,
+                    'error'
+                );
+
+            } finally {
+                button.disabled = false;
+            }
+        });
 
     // Event Handler untuk Form Search
     // ambil data education berdasarkan keyword search
